@@ -62,7 +62,8 @@ contribute to no row of this mart.
 
 ## Input
 
-Both files go under `dbt_practice/seeds/day1/`.
+Both files are already written to `dbt_practice/seeds/day1/` and loaded — you do not
+create them. Shown here so the data is readable next to the requirements.
 
 `raw_d1_customers.csv`
 
@@ -182,8 +183,6 @@ docker compose exec dbt dbt build --select path:models/day1
 ## Deliverables
 
 ```
-dbt_practice/seeds/day1/raw_d1_customers.csv
-dbt_practice/seeds/day1/raw_d1_orders.csv
 dbt_practice/models/day1/staging/stg_d1_customers.sql
 dbt_practice/models/day1/staging/stg_d1_orders.sql
 dbt_practice/models/day1/staging/schema.yml

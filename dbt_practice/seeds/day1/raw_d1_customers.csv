@@ -1,0 +1,5 @@
+CustomerID,FullName,Email,SignupDate,Country
+1,Alice Chen,alice@example.com,2024-01-05,US
+2,Bob Ortiz,BOB@Example.com,2024-01-11,US
+3,Carol Ng,carol@example.com,2024-02-02,CA
+4,Dan Wu,dan@example.com,2024-02-20,US

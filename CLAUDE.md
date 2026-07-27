@@ -154,6 +154,25 @@ Only when Neil explicitly asks for a new problem.
 - Write trap notes to `days/dayNN/.traps.md` and **never read that file back** until the
   day reaches stage `4-verify` or later.
 
+## Seed data is yours to write
+
+Setting the problem includes **materialising its input data**. Before the day reaches
+stage `1-solve`, write every seed CSV from the day's `## Input` section to
+`dbt_practice/seeds/dayNN/`, byte-for-byte identical to the fenced block in
+`problem.md`. Neil never hand-copies data out of a markdown file — transcription typos
+are noise, not practice.
+
+- The CSVs stay in `## Input` as documentation, but they are **no longer Neil's
+  deliverable**; do not list them under `## Deliverables`.
+- Missing values are empty fields — no space, no `NULL`, no `""`. A trailing newline,
+  and nothing else, after the last row.
+- After writing them, run `dbt seed --select path:seeds/dayNN` yourself so the day
+  starts with loadable data. A seed that fails to load is an environment problem, and
+  it is yours in every stage — including `1-solve`.
+- Once stage `1-solve` begins, the CSVs are **frozen**. If the data is wrong, say so
+  plainly, fix `problem.md` and the CSV together, and tell Neil the input changed —
+  never edit a seed to make his run go green.
+
 ---
 
 # Environment
@@ -186,7 +205,8 @@ repo** and must never share config with it.
 
 | Path | Who writes it |
 |---|---|
-| `dbt_practice/models/**`, `dbt_practice/seeds/**` | **Neil only.** Do not create or edit unless he explicitly asks in stage 4+. |
+| `dbt_practice/models/**` | **Neil only.** Do not create or edit unless he explicitly asks in stage 4+. |
+| `dbt_practice/seeds/dayNN/*.csv` | **You**, as part of `/newday NN` — see below. Neil never hand-copies seed data. |
 | `days/dayNN/problem.md`, `.traps.md` | You (when setting a problem) |
 | `days/dayNN/notes.md`, `verdict.md` | Neil |
 | `days/dayNN/reference_solution.md` | Pasted in by Neil from the incognito session |
@@ -200,7 +220,7 @@ repo** and must never share config with it.
 | Command | Stage | Notes |
 |---|---|---|
 | `/env` | any | container + `dbt debug` + `dbt parse` health check |
-| `/newday NN` | 0 → 1 | proposes topic, waits for confirmation, then scaffolds. **Ends by telling Neil to `/clear`** |
+| `/newday NN` | 0 → 1 | proposes topic, waits for confirmation, then scaffolds `days/dayNN/` **and writes the day's seed CSVs**. **Ends by telling Neil to `/clear`** |
 | `/lineage NN` | any | proves no cross-day `ref()` contamination; structural-only during `1-solve` |
 | `/genprompt NN` | 2 | emits the blind-generation prompt; never generates a solution |
 | `/review NN` | 3 → 4 | blind review → execute → three-way compare → grade verdict |

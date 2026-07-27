@@ -1,7 +1,7 @@
 ---
 description: Propose and scaffold a new practice day
 argument-hint: [day number]
-allowed-tools: Read, Write, Edit, Glob, Bash(mkdir:*), Bash(ls:*)
+allowed-tools: Read, Write, Edit, Glob, Bash(mkdir:*), Bash(ls:*), Bash(docker compose exec dbt dbt seed:*)
 ---
 
 Set up Day $ARGUMENTS. If no number was given, use the next unstarted day in
@@ -30,11 +30,19 @@ re-exercising it and say so.
    exactly: Problem / Input / Expected Output / Verification / Deliverables / Debrief
    questions. Embed 2-3 traps; at least one must surface as a **failing test** when
    handled naively. At least one debrief question must be a trade-off question.
-   Every model and seed name carries the `_dNN_` prefix.
-4. `days/dayNN/.traps.md` — the trap list, with what a naive solution does and which
+   Every model and seed name carries the `_dNN_` prefix. `## Deliverables` lists only
+   models and schema.yml — **never the seed CSVs**; those are yours (next step).
+4. **The seed CSVs themselves**, one file per fenced csv block in `## Input`, written to
+   `dbt_practice/seeds/dayNN/`. Byte-for-byte identical to the block: missing values are
+   empty fields (no space, no `NULL`, no `""`), one trailing newline at end of file.
+   Then load them and show the output verbatim:
+   `docker compose exec dbt dbt seed --select path:seeds/dayNN`.
+   If the load fails, fix it before handing the day over — Neil must never inherit a
+   broken seed.
+5. `days/dayNN/.traps.md` — the trap list, with what a naive solution does and which
    test catches it.
-5. `days/dayNN/notes.md` — headings `## Assumptions` and `## Debrief answers`.
-6. `days/dayNN/STAGE` — containing `1-solve`.
+6. `days/dayNN/notes.md` — headings `## Assumptions` and `## Debrief answers`.
+7. `days/dayNN/STAGE` — containing `1-solve`.
 
 ## Close
 
