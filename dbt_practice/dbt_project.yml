@@ -15,6 +15,11 @@ clean-targets:
 
 models:
   dbt_practice:
+    day1:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: table
 
 seeds:
   dbt_practice:
