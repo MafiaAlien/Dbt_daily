@@ -1,0 +1,19 @@
+# dbt artifacts
+dbt_practice/target/
+dbt_practice/dbt_packages/
+dbt_practice/logs/
+logs/
+
+# DuckDB database file — disposable, rebuilt with `dbt build`
+*.duckdb
+*.duckdb.wal
+
+# credentials — the Databricks profile carries a PAT
+profiles.yml
+!profiles.example.yml
+
+# python / editor
+__pycache__/
+.venv/
+.DS_Store
+.vscode/

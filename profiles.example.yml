@@ -1,0 +1,10 @@
+# Copy to profiles.yml (gitignored) and mount at /root/.dbt/profiles.yml.
+# Local practice environment only. The Databricks course environment lives in a
+# separate venv and a separate directory — never merge the two profiles.
+dbt_practice:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: './practice.duckdb'
+      threads: 4

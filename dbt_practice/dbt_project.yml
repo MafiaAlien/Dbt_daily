@@ -1,0 +1,21 @@
+name: 'dbt_practice'
+version: '1.0.0'
+profile: 'dbt_practice'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_practice:
+
+seeds:
+  dbt_practice:
+    +quote_columns: false
