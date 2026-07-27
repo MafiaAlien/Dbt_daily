@@ -1,3 +1,7 @@
+# Pinned so the compose project name is independent of the directory name.
+# Renaming the repo folder then produces no orphaned containers or images.
+name: dbt_daily
+
 services:
   dbt:
     build: .
