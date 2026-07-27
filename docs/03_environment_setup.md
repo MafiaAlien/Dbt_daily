@@ -39,15 +39,26 @@ ENTRYPOINT ["bash"]
 
 `docker-compose.yml`
 ```yaml
+# Pinned so the compose project name is independent of the directory name.
+# Renaming the repo folder then produces no orphaned containers or images.
+name: dbt_daily
+
 services:
   dbt:
     build: .
     volumes:
       - ./dbt_practice:/workspace
-      - ./profiles.yml:/root/.dbt/profiles.yml
+      - ./profiles.yml:/root/.dbt/profiles.yml:ro
     stdin_open: true
     tty: true
 ```
+
+Without the `name:` key, compose derives the project name from the directory name, so
+renaming the repo silently strands the old containers and image — they keep running
+against the same bind-mounted `practice.duckdb`, and DuckDB is single-writer.
+
+`profiles.yml` is mounted `:ro`. dbt only reads it; a read-only mount means a stray
+command inside the container cannot rewrite the host copy.
 
 `profiles.yml` (mounted to `/root/.dbt/profiles.yml`)
 ```yaml
@@ -65,11 +76,17 @@ dbt_practice:
 name: dbt_practice
 version: '1.0.0'
 profile: dbt_practice
+
 model-paths: ["models"]
 seed-paths: ["seeds"]
 test-paths: ["tests"]
-snapshot-paths: ["snapshots"]
+analysis-paths: ["analyses"]
 macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
 
 models:
   dbt_practice:
@@ -89,9 +106,21 @@ seeds:
     +quote_columns: false
 ```
 
+The `day1:` / `day2:` blocks above are illustrative — they show the shape after two days
+have been scaffolded. In the live file `models: dbt_practice:` starts empty and
+`/newday` appends one block per day.
+
 Note: `seeds:` is a **top-level key**, sibling to `models:` — not nested under it.
 Seeds have **no materialization config**; they are always loaded as tables. What is
 configurable per-day: `+schema`, `+column_types`, `+quote_columns`, `+enabled`.
+
+**On the `*-paths` keys:** every one of them above is dbt's own default written out
+explicitly — `model-paths` defaults to `["models"]`, `test-paths` to `["tests"]`,
+`analysis-paths` to `["analyses"]`, `macro-paths` to `["macros"]`, and `snapshot-paths`
+to `["snapshots"]`. Omitting a key does not disable the directory. In particular the
+Day 7 / Day 8 snapshot problems need **only** a `snapshots/` directory to exist; no
+`snapshot-paths` entry is required. Declaring these keys is a readability choice, not a
+functional one — the one time it matters is when a path differs from the default.
 
 Each new day **adds** a `dayN` block; previous blocks stay so any earlier day can be
 rebuilt on demand.
