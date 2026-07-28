@@ -1,0 +1,38 @@
+# Reference-solution project. Separate from dbt_practice on purpose.
+#
+# dbt resource names are unique per PROJECT, not per directory, so the reference
+# solution cannot live beside Neil's models under the same project — two
+# stg_d1_customers.sql would fail to parse. A second project lets the generated
+# reference run under its own original names, with zero edits to the generated code.
+#
+# Its own DuckDB file (practice_ref.duckdb, via the dbt_practice_ref profile) keeps
+# the two runs from overwriting each other's relations.
+#
+# Day blocks below must mirror dbt_practice/dbt_project.yml exactly — the reference
+# solution is generated against the materializations stated in the problem file.
+name: dbt_practice_ref
+version: '1.0.0'
+profile: dbt_practice_ref
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_practice_ref:
+    day1:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: table
+
+seeds:
+  dbt_practice_ref:
+    +quote_columns: false

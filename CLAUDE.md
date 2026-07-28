@@ -114,7 +114,10 @@ An uncommitted verdict can be edited after seeing results. Check with
 1. **Blind review** — read both solutions and the verdict, no execution. Severity-ordered
    Critical → Major → Minor → Style, no praise padding. Anything execution will settle
    gets marked `-> 实跑决定`, not argued. Traps still not named.
-2. **Execute** — run the reference solution, then Neil's, in the container.
+2. **Execute** — run the reference solution first, then Neil's. The reference is
+   transcribed **verbatim** from `reference_solution.md` into the separate
+   `dbt_practice_ref/` project and run there (`-w /workspace_ref`). Never edit the
+   generated code to make it build — a fix applied here is a bug that never gets scored.
 3. **Three-way compare** — Neil × reference × actual results. Only now read `.traps.md`.
 4. **Grade the verdict** — call by call: right / wrong / not settled.
 
@@ -187,6 +190,14 @@ features exist. Full detail in `docs/03_environment_setup.md`. Key facts:
 - **One dbt project for all days.** Days are subdirectories under `models/` and `seeds/`.
 - **Resource names must be unique project-wide, regardless of directory.** Every model
   and seed carries a day prefix: `raw_d3_orders`, `stg_d3_orders`, `fct_d3_revenue`.
+- **Two projects, one container.** `dbt_practice/` (Neil's, mounted `/workspace`) and
+  `dbt_practice_ref/` (reference solutions, mounted `/workspace_ref`, own profile, own
+  `practice_ref.duckdb`). The split exists *because* names are unique per project: the
+  reference must run under its original names with zero edits, so it cannot share a
+  project with Neil's models. Run it with
+  `docker compose exec -w /workspace_ref dbt dbt build --select path:models/dayNN`.
+  Its `dayNN:` config blocks mirror `dbt_practice/dbt_project.yml`; its seeds are
+  copies of `dbt_practice/seeds/dayNN/`.
 - `ref()` resolves by **name**, not path. Cross-day contamination is prevented by the
   prefix, not by the folder.
 - `seeds:` is a top-level key in `dbt_project.yml`, sibling to `models:`. Seeds have no
@@ -210,6 +221,7 @@ repo** and must never share config with it.
 | `days/dayNN/problem.md`, `.traps.md` | You (when setting a problem) |
 | `days/dayNN/notes.md`, `verdict.md` | Neil |
 | `days/dayNN/reference_solution.md` | Pasted in by Neil from the incognito session |
+| `dbt_practice_ref/**` | **You**, in `/review NN` phase 2 only. Models transcribed verbatim from `reference_solution.md` — never edited, never authored. |
 | `days/dayNN/digest.md`, `docs/05_progress_log.md`, `docs/06_key_takeaways.md` | You, **via `/digest` only** |
 | `docs/01`–`docs/04` | Neil; propose edits, don't apply unprompted |
 

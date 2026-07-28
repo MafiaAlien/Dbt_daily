@@ -4,6 +4,10 @@
 under `models/` and `seeds/`, not by separate dbt projects. Rationale and the
 alternatives considered are in "Day scoping" below.
 
+The one split that *is* by project is Neil's code vs the generated reference solution —
+see "The reference-solution project". That split is forced by dbt's per-project name
+uniqueness, not by day scoping.
+
 ## Two environments, kept isolated
 
 | Environment | Purpose | Adapter | Location |
@@ -48,6 +52,8 @@ services:
     build: .
     volumes:
       - ./dbt_practice:/workspace
+      # Reference-solution project, run with `docker compose exec -w /workspace_ref dbt …`
+      - ./dbt_practice_ref:/workspace_ref
       - ./profiles.yml:/root/.dbt/profiles.yml:ro
     stdin_open: true
     tty: true
@@ -69,7 +75,20 @@ dbt_practice:
       type: duckdb
       path: './practice.duckdb'
       threads: 4
+
+# Reference solutions. Separate DB file so a reference run never overwrites Neil's
+# relations. Path is relative to the cwd, i.e. /workspace_ref.
+dbt_practice_ref:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: './practice_ref.duckdb'
+      threads: 4
 ```
+
+Two profiles, one file. The profile a project uses is chosen by its own
+`profile:` key in `dbt_project.yml`, not by anything at the command line.
 
 `dbt_practice/dbt_project.yml`
 ```yaml
@@ -179,6 +198,38 @@ Therefore every resource carries a day prefix:
 **Exception:** a problem that needs genuinely different *project-level* configuration
 (e.g. Day 13, dev vs prod targets and schemas) may get its own project directory.
 
+## The reference-solution project
+
+Stage 4 executes the Stage 2 reference solution. It cannot run inside `dbt_practice/`:
+model names are unique **per project**, so the reference's `stg_dNN_customers.sql` and
+Neil's would collide and `dbt parse` would fail for both. The two ways out are renaming
+the reference's models or giving it its own project; renaming means editing generated
+code, and an edit is exactly how a real bug in the reference quietly disappears before
+Stage 4 can score it. So: its own project.
+
+```
+dbt_practice_ref/
+├── dbt_project.yml        (name: dbt_practice_ref, profile: dbt_practice_ref)
+├── models/dayNN/          transcribed verbatim from days/dayNN/reference_solution.md
+├── seeds/dayNN/           cp -R from dbt_practice/seeds/dayNN/  (gitignored copies)
+└── practice_ref.duckdb    its own database file
+```
+
+- Mounted at `/workspace_ref` in the **same** container — one dbt install, two projects.
+- Its `dayNN:` model config blocks must mirror `dbt_practice/dbt_project.yml`. The
+  reference is generated against the materializations the problem states; if the two
+  drift, the reference run stops proving anything. `/newday` writes both blocks.
+- Separate `.duckdb` file, so a reference run never overwrites the relations Neil's run
+  produced — both sets of results stay queryable during the three-way compare.
+- Written only by `/review NN` phase 2, and only by transcription. Nothing in
+  `dbt_practice_ref/models/` is ever authored or corrected in this repo.
+
+```bash
+cp -R dbt_practice/seeds/day1 dbt_practice_ref/seeds/day1
+docker compose exec -w /workspace_ref dbt dbt build --select path:models/day1
+duckdb dbt_practice_ref/practice_ref.duckdb        # inspect reference results
+```
+
 ## Command cheat sheet
 
 ```
@@ -197,6 +248,9 @@ dbt build --exclude path:models/day1  # everything except day 1
 dbt test                              # schema + singular tests
 dbt compile                           # inspect compiled SQL under target/
 duckdb practice.duckdb                # ad-hoc SQL inspection
+
+docker compose exec -w /workspace_ref dbt dbt build --select path:models/day2
+                                      # same, in the reference-solution project
 ```
 
 Node selection syntax (`path:`, `tag:`, `+` upstream/downstream, `--exclude`) is itself

@@ -8,3 +8,13 @@ dbt_practice:
       type: duckdb
       path: './practice.duckdb'
       threads: 4
+
+# Reference solutions. Separate DB file so a reference run never overwrites Neil's
+# relations. Path is relative to the cwd, i.e. /workspace_ref.
+dbt_practice_ref:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: './practice_ref.duckdb'
+      threads: 4

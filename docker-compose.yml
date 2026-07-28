@@ -7,6 +7,8 @@ services:
     build: .
     volumes:
       - ./dbt_practice:/workspace
+      # Reference-solution project, run with `docker compose exec -w /workspace_ref dbt …`
+      - ./dbt_practice_ref:/workspace_ref
       - ./profiles.yml:/root/.dbt/profiles.yml:ro
     stdin_open: true
     tty: true

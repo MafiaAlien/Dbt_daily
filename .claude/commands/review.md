@@ -1,7 +1,7 @@
 ---
 description: Blind review, then execute, then three-way compare, then grade Neil's verdict
 argument-hint: [day number]
-allowed-tools: Read, Edit, Glob, Bash(git log:*), Bash(git status:*), Bash(docker compose:*)
+allowed-tools: Read, Write, Edit, Glob, Bash(git log:*), Bash(git status:*), Bash(docker compose:*), Bash(cp:*), Bash(mkdir:*)
 ---
 
 Day $ARGUMENTS. This command covers Stage 3 and Stage 4. **Run the four phases in
@@ -38,14 +38,34 @@ No praise padding. For anything execution will settle, write
 
 ## Phase 2 — Execute
 
+Reference first, in its own project — **never** alongside Neil's models: resource names
+are unique per project, so two `stg_dNN_*.sql` would fail to parse.
+
+Transcribe the code blocks of `days/dayNN/reference_solution.md` into
+`dbt_practice_ref/models/dayNN/…` **verbatim** — original names, no reformatting, no
+"obvious" fixes. Editing the reference is how a real bug in it silently disappears
+before it can be scored. Then mirror the day's config and data:
+
+```
+# dbt_practice_ref/dbt_project.yml already carries the dayNN: block (added by /newday)
+cp -R dbt_practice/seeds/dayNN dbt_practice_ref/seeds/dayNN
+docker compose exec -w /workspace_ref dbt dbt build --select path:models/dayNN
+```
+
+Then Neil's, unchanged:
+
 ```
 docker compose exec dbt dbt seed  --select path:seeds/dayNN
 docker compose exec dbt dbt build --select path:models/dayNN
 ```
 
-Compare against the Expected Output table in `problem.md`, order-insensitive unless the
-problem specifies ordering. On a mismatch, query the DuckDB CLI manually before
-concluding whose code is wrong. Run Neil's solution the same way.
+Show both runs' output verbatim, including failing tests. Compare each against the
+Expected Output table in `problem.md`, order-insensitive unless the problem specifies
+ordering. On a mismatch, query the DuckDB CLI manually before concluding whose code is
+wrong — `practice.duckdb` for Neil's, `practice_ref.duckdb` for the reference.
+
+If the reference does not build at all, that is a finding, not a blocker: record it and
+carry on to Phase 3.
 
 ## Phase 3 — Three-way compare
 

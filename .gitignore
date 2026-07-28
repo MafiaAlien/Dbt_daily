@@ -2,7 +2,14 @@
 dbt_practice/target/
 dbt_practice/dbt_packages/
 dbt_practice/logs/
+dbt_practice_ref/target/
+dbt_practice_ref/dbt_packages/
+dbt_practice_ref/logs/
 logs/
+
+# Reference-project seeds are mechanical copies of dbt_practice/seeds/dayNN/,
+# re-made by /review Phase 2. The originals are the tracked ones.
+dbt_practice_ref/seeds/day*/
 
 # DuckDB database file — disposable, rebuilt with `dbt build`
 *.duckdb

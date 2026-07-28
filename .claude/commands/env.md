@@ -13,6 +13,11 @@ no essay.
 4. The active day has a `dayNN:` block under `models: dbt_practice:` in
    `dbt_practice/dbt_project.yml`, and its directories exist.
 5. Whether `practice.duckdb` exists, and its mtime.
+6. Reference project reachable: `docker compose exec -w /workspace_ref dbt dbt debug`,
+   and its `dayNN:` block matches the one in `dbt_practice/dbt_project.yml`. A drifted
+   materialization there silently changes what the reference run proves. Report
+   pass/fail only — do not read anything under `dbt_practice_ref/models/`, which holds
+   the reference solution.
 
 If state looks stale or a build is behaving inconsistently, offer — do not run
 unprompted — the clean rebuild:

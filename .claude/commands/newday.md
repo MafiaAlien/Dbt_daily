@@ -25,7 +25,10 @@ re-exercising it and say so.
 1. Directories: `dbt_practice/models/dayNN/staging`, `.../marts`, and
    `dbt_practice/seeds/dayNN`. Add `intermediate/` only for Medium and above.
 2. A `dayNN:` block appended under `models: dbt_practice:` in
-   `dbt_practice/dbt_project.yml`. Never remove existing day blocks.
+   `dbt_practice/dbt_project.yml`, and the **same block** under
+   `models: dbt_practice_ref:` in `dbt_practice_ref/dbt_project.yml` — the reference
+   solution is generated against the materializations the problem states, so the two
+   projects must agree. Never remove existing day blocks.
 3. `days/dayNN/problem.md` — English, following `docs/02_problem_format_and_templates.md`
    exactly: Problem / Input / Expected Output / Verification / Deliverables / Debrief
    questions. Embed 2-3 traps; at least one must surface as a **failing test** when
