@@ -10,7 +10,7 @@ models:
           - unique
           - not_null
           - relationships:
-              arguments: 
+              arguments:
                 to: ref('stg_d1_customers')
                 field: customer_id
       - name: order_count

@@ -1,11 +1,11 @@
 with 
 orders as (
     select 
-        OrderID as order_id,
-        CustomerID as customer_id,
-        OrderTs as order_ts,
-        Amount as amount,
-        Status as status
+        cast(OrderID as integer) as order_id,
+        cast(CustomerID as integer) as customer_id,
+        cast(OrderTs as timestamp) as ordered_at,
+        cast(Amount as decimal(10, 2)) as amount,
+        cast(Status as varchar) as status
 
     from 
         {{ ref('raw_d1_orders') }}
