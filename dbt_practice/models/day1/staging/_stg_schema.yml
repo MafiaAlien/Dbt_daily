@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_d1_customers
+    description: "One row per customer, renamed and recast from raw_d1_customers."
+    columns:
+      - name: customer_id
+        description: "Natural key of the customer."
+        data_tests:
+          - unique
+          - not_null
+      - name: email
+        description: "Lower-cased contact email."
+        data_tests:
+          - not_null
+
+  - name: stg_d1_orders
+    description: "One row per order, renamed and recast from raw_d1_orders."
+    columns:
+      - name: order_id
+        description: "Natural key of the order."
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer who placed the order, if any."
+        data_tests:
+          - relationships:
+              arguments: 
+                to: ref('stg_d1_customers')
+                field: customer_id

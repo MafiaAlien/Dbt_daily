@@ -140,8 +140,9 @@ models:
         description: "Customer who placed the order, if any."
         data_tests:
           - relationships:
-              to: ref('stg_d1_customers')
-              field: customer_id
+              arguments:
+                to: ref('stg_d1_customers')
+                field: customer_id
 ```
 
 `dbt_practice/models/day1/marts/schema.yml`
@@ -159,8 +160,9 @@ models:
           - unique
           - not_null
           - relationships:
-              to: ref('stg_d1_customers')
-              field: customer_id
+              arguments:
+                to: ref('stg_d1_customers')
+                field: customer_id
       - name: order_count
         description: "Orders placed by this customer, any status. Zero if none."
         data_tests:

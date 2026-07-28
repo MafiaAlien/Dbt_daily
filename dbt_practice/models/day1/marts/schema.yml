@@ -1,0 +1,21 @@
+models:
+  - name: fct_d1_customer_orders
+    description: "One row per customer, with lifetime order count and captured amount."
+    columns:
+      - name: customer_id
+        description: "Grain of this model."
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments: 
+                to: ref('stg_d1_customers')
+                field: customer_id
+      - name: order_count
+        description: "Orders placed by this customer, any status. Zero if none."
+        data_tests:
+          - not_null
+      - name: total_amount
+        description: "Sum of captured order amounts. Zero if none captured."
+        data_tests:
+          - not_null
