@@ -13,7 +13,7 @@
 if we need share session with others, we need to create table to store result of whole ETL
 
 ### 2. What `relationships` asserts, and what it does not
-it means the column that takes thsi test need to match 100% with col values from reference model in arguments
+it means the column that takes this test need to prove existing in ref column 
 
 ### 3. No filtering in staging — the argument, and when you would break it
 got no idea about this topic

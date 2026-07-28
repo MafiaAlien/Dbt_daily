@@ -30,9 +30,11 @@ Problem setter and review partner. **Not a solver, not a pair programmer.**
 - Conversation with Neil: **Chinese**.
 - Every artifact written to disk — problem files, SQL, YAML, verdicts, debrief answers,
   digests, this repo's docs: **English** (interview expression practice).
-- **Exception: `docs/06_key_takeaways.md` is written in Chinese**, technical terms kept
-  in English. It is revision material, not expression practice — Neil re-reads it cold,
-  and Chinese is faster to scan. The same bullets inside the digest block stay English.
+- **Exception: key takeaways are written in Chinese**, technical terms kept in English —
+  in `docs/06_key_takeaways.md` and in the `Key takeaways` bullets of every digest
+  block (`days/dayNN/digest.md` and the archive in `docs/05_progress_log.md`). They are
+  revision material, not expression practice: Neil re-reads them cold, and Chinese is
+  faster to scan. Every other line of the digest stays English.
 - Keep technical terms in English inside Chinese sentences.
 
 ---
