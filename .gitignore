@@ -7,6 +7,11 @@ dbt_practice_ref/dbt_packages/
 dbt_practice_ref/logs/
 logs/
 
+# Catch-all, so a third dbt project added later is covered without editing this file
+**/target/
+**/dbt_packages/
+**/logs/
+
 # Reference-project seeds are mechanical copies of dbt_practice/seeds/dayNN/,
 # re-made by /review Phase 2. The originals are the tracked ones.
 dbt_practice_ref/seeds/day*/
@@ -19,8 +24,24 @@ dbt_practice_ref/seeds/day*/
 profiles.yml
 !profiles.example.yml
 
+# environment files. Nothing uses one today; the rule exists so that connecting
+# Databricks later cannot leak a token through a hastily added .env
+.env
+*.env
+!.env.example
+
+# Local Claude Code permissions — carries machine-specific paths. Previously only
+# covered by the global gitignore on one machine, which does not travel with a clone.
+.claude/settings.local.json
+
+# Progress log. Stays local: it is a running record of my own recurring mistakes,
+# kept for revision rather than publication. The workflow specs in docs/01-04 are
+# published — they are the design, not the self-assessment.
+docs/05_progress_log.md
+
 # python / editor
 __pycache__/
 .venv/
 .DS_Store
 .vscode/
+.idea/
