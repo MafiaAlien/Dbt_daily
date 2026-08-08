@@ -9,15 +9,30 @@ order. Do not read ahead, do not reorder, do not execute anything before Phase 2
 
 ## Gate
 
-`days/dayNN/verdict.md` must exist, be non-empty, and be **committed to git**:
+`days/dayNN/verdict.md` must exist, be **filled in**, and be **committed to git**:
 
 ```
 git log -1 --format=%H -- days/dayNN/verdict.md
 git status --short days/dayNN/verdict.md
 ```
 
-If it is missing, empty, or has uncommitted changes: STOP and say why in Chinese — an
+If it is missing or has uncommitted changes: STOP and say why in Chinese — an
 uncommitted verdict can be edited after seeing results, which destroys the scorecard.
+
+`/genprompt` scaffolds an empty skeleton, so **non-empty is not the test.** Read the file
+and STOP unless all three hold:
+
+- at least one `### D` block under `Material differences`, with a **Call** that names
+  `reference` / `mine` / `equivalent` — not blank, not a description
+- `My own solution — where I think it is wrong` has real content
+- no unreplaced placeholder (`<one-line title>`, `<list or "none">`, a bare `-`)
+
+A committed skeleton satisfies "exists and committed" while settling nothing. Say plainly
+which section is still empty; do not offer partial review in the meantime.
+
+`days/dayNN/reference_solution.md` must also exist and **contain at least one fenced code
+block**. `/genprompt` creates it empty, so an empty file means Stage 2 never happened —
+STOP and say so. Never fill it yourself, in any phase, for any reason.
 
 ## Phase 1 — Blind review (no execution)
 

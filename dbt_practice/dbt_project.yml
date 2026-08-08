@@ -20,6 +20,11 @@ models:
         +materialized: view
       marts:
         +materialized: table
+    day2:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: table
 
 seeds:
   dbt_practice:

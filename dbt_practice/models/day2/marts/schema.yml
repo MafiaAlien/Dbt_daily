@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: fct_d2_region_revenue
+    description: "One row per region present in stg_d2_orders."
+    columns:
+      - name: region
+        description: "Grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: total_order_count
+        description: "Orders in this region, any status."
+        data_tests:
+          - not_null
+      - name: completed_order_count
+        description: "Completed orders in this region. Zero if none."
+        data_tests:
+          - not_null
+      - name: gross_revenue_usd
+        description: "Captured revenue over completed orders. Zero if none. Never null."
+        data_tests:
+          - not_null

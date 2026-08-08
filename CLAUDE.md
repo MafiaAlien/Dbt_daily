@@ -104,17 +104,22 @@ On `/genprompt NN`, output exactly two things for him to copy elsewhere:
 2. The **Problem / Input / Expected Output / Verification** sections of the day's
    problem file — nothing else. Never his own code, never the trap notes.
 
-He pastes the result back into `days/dayNN/reference_solution.md` verbatim.
+He pastes the result back into `days/dayNN/reference_solution.md` verbatim. You create
+that file **empty** and never write into it — the whole point is that its contents came
+from a conversation that had not read this repo.
 
 ## Stages 3 & 4 — Review + Verify → both live in `/review NN`
 
 One command, four phases, run strictly in order. This ordering *is* the discipline —
 splitting it or reordering it makes the scorecard meaningless.
 
-**Gate:** `days/dayNN/verdict.md` must exist, be non-empty, and be **committed to git**.
-An uncommitted verdict can be edited after seeing results. Check with
-`git log -1 --format=%H -- days/dayNN/verdict.md`. If it fails, stop — do not offer
-"a few quick thoughts" in the meantime.
+**Gate:** `days/dayNN/verdict.md` must exist, be **filled in**, and be **committed to
+git**. An uncommitted verdict can be edited after seeing results. Check with
+`git log -1 --format=%H -- days/dayNN/verdict.md`. Because `/genprompt` scaffolds an
+empty skeleton, non-empty is not the test — the `Material differences` and `My own
+solution` sections must carry real content, with a named call on each difference. Full
+check in `.claude/commands/review.md`. If it fails, stop — do not offer "a few quick
+thoughts" in the meantime.
 
 1. **Blind review** — read both solutions and the verdict, no execution. Severity-ordered
    Critical → Major → Minor → Style, no praise padding. Anything execution will settle
@@ -224,8 +229,9 @@ repo** and must never share config with it.
 | `dbt_practice/models/**` | **Neil only.** Do not create or edit unless he explicitly asks in stage 4+. |
 | `dbt_practice/seeds/dayNN/*.csv` | **You**, as part of `/newday NN` — see below. Neil never hand-copies seed data. |
 | `days/dayNN/problem.md`, `.traps.md` | You (when setting a problem) |
-| `days/dayNN/notes.md`, `verdict.md` | Neil |
-| `days/dayNN/reference_solution.md` | Pasted in by Neil from the incognito session |
+| `days/dayNN/notes.md` | Neil |
+| `days/dayNN/verdict.md` | **Skeleton** by you, in `/genprompt` only, and only if the file does not exist. **Every word of content is Neil's.** |
+| `days/dayNN/reference_solution.md` | **Empty file** created by you in `/genprompt` only. All content pasted in by Neil from the incognito session, verbatim. You never write a byte into it — not a heading, not a fix, not in `/review`. |
 | `dbt_practice_ref/**` | **You**, in `/review NN` phase 2 only. Models transcribed verbatim from `reference_solution.md` — never edited, never authored. |
 | `days/dayNN/digest.md`, `docs/05_progress_log.md`, `docs/06_key_takeaways.md` | You, **via `/digest` only** |
 | `docs/01`–`docs/04` | Neil; propose edits, don't apply unprompted |
@@ -239,7 +245,7 @@ repo** and must never share config with it.
 | `/env` | any | container + `dbt debug` + `dbt parse` health check |
 | `/newday NN` | 0 → 1 | proposes topic, waits for confirmation, then scaffolds `days/dayNN/` **and writes the day's seed CSVs**. **Ends by telling Neil to `/clear`** |
 | `/lineage NN` | any | proves no cross-day `ref()` contamination; structural-only during `1-solve` |
-| `/genprompt NN` | 2 | emits the blind-generation prompt; never generates a solution |
+| `/genprompt NN` | 2 | emits the blind-generation prompt; never generates a solution; creates an empty `reference_solution.md` and the blank `verdict.md` skeleton if absent |
 | `/review NN` | 3 → 4 | blind review → execute → three-way compare → grade verdict |
 | `/digest NN` | 5 | **the only command that writes to `docs/05_*` and `docs/06_*`** |
 
