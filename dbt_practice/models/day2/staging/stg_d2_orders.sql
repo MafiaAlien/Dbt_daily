@@ -22,7 +22,13 @@ renamed AS (
 
 most_recent_updated AS (
     SELECT 
-        *
+    order_id,
+    customer_id,
+    country_code,
+    order_status,
+    ordered_at,
+    amount_usd,
+    exported_at
     FROM 
         renamed
     WHERE rn = 1

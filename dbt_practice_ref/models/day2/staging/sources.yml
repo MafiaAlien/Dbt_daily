@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: erp
+    description: "Nightly full-snapshot order export dropped by the external ERP system. Not built by dbt."
+    schema: main
+    # No `database:` key on purpose — the source resolves against whatever
+    # database the active target points at.
+    tables:
+      - name: orders
+        identifier: raw_d2_orders
+        description: "Full order snapshot. An order is re-sent whenever it is corrected, so ORDER_ID is not unique here."
+        loaded_at_field: EXPORTED_AT
+        freshness:
+          warn_after:
+            count: 12
+            period: hour
+          error_after:
+            count: 24
+            period: hour
+        columns:
+          - name: ORDER_ID
+            description: "Natural key of the order. Repeats across corrections, so it is NOT unique at this layer."
+            data_tests:
+              - not_null
+          - name: EXPORTED_AT
+            description: "Timestamp of the export that carried this version of the row."
+            data_tests:
+              - not_null

@@ -18,7 +18,7 @@ agg as (
         coalesce(cr.region, 'Unmapped') as region,
         count(*) as total_order_count,
         sum(case when o.order_status = 'completed' then 1 else 0 end) as completed_order_count,
-        sum(case when o.order_status = 'completed' then amount_usd else 0 end) as gross_revenue_usd
+        sum(case when o.order_status = 'completed' then coalesce(amount_usd, 0) else 0 end) as gross_revenue_usd
     from 
         orders o left join country_region cr using(country_code) 
     group by 

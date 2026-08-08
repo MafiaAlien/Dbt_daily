@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_d2_orders
+    description: "One row per order_id, taken from the latest ERP export of that order."
+    columns:
+      - name: order_id
+        description: "Natural key of the order, and the grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: order_status
+        description: "Normalised order status."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["completed", "pending", "cancelled"]
+      - name: country_code
+        description: "Two-letter country code exactly as the ERP sent it."
+        data_tests:
+          - not_null
+      - name: exported_at
+        description: "Export timestamp of the winning row."
+        data_tests:
+          - not_null
+
+  - name: stg_d2_country_region
+    description: "One row per country_code, mapping a country to an analytics region."
+    columns:
+      - name: country_code
+        description: "Two-letter country code, and the grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: region
+        description: "Analytics region this country rolls up to."
+        data_tests:
+          - not_null
