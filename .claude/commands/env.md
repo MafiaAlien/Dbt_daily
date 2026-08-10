@@ -8,6 +8,10 @@ no essay.
 
 1. Container running: `docker compose ps dbt`. If not, `docker compose up -d dbt`.
 2. Connection: `docker compose exec dbt dbt debug`. Report the adapter and dbt versions.
+   Versions are **pinned in the `Dockerfile` on purpose** — dbt's "Update available" /
+   "plugin is out of date with dbt-core" notices are expected and are **not** a failing
+   check. Report them only if the running versions differ from the pinned ones, which
+   would mean the container is older than the image.
 3. Parse: `docker compose exec dbt dbt parse`. This catches duplicate resource names
    across days — the failure mode the `_dNN_` prefix convention exists to prevent.
 4. The active day — resolved per **Which day** in `CLAUDE.md`, and named in the report —
