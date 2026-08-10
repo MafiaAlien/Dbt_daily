@@ -9,6 +9,9 @@ order. Do not read ahead, do not reorder, do not execute anything before Phase 2
 
 ## Gate
 
+Everything below is derived from files. Neil declares nothing; if a check fails, name the
+file and stop.
+
 `days/dayNN/verdict.md` must exist, be **filled in**, and be **committed to git**:
 
 ```
@@ -84,7 +87,11 @@ carry on to Phase 3.
 
 ## Phase 3 — Three-way compare
 
-Now read `days/dayNN/.traps.md`.
+Now read `days/dayNN/.traps.md`. **This is one of only two places in the repo where that
+file may be opened** (the other is `/digest`), and only because phases 1 and 2 just ran
+in this conversation. If you arrived here without having run them — a resumed session, a
+skipped phase, Neil asking to "jump to the compare" — go back and run them. No file on
+disk can authorise this read.
 
 Produce a table: **Neil's solution × reference solution × actual results**, one row per
 material difference. For each, state which is correct and by what mechanism.
@@ -97,5 +104,6 @@ Score `verdict.md` call by call: right / wrong / not settled. A correct catch of
 bug in the reference solution is a win — say so plainly. A false alarm and a missed bug
 both go to the digest.
 
-Set `days/dayNN/STAGE` to `5-digest`. Close with one line in Chinese: next is
-`/digest NN`.
+Write no state file. Phase 2 already left the evidence `/digest` derives from — the
+transcribed models under `dbt_practice_ref/models/dayNN/`. Close with one line in
+Chinese: next is `/digest NN`.

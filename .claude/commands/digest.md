@@ -1,10 +1,18 @@
 ---
 description: Write the digest and update the logs — the only command that writes logs
 argument-hint: [day number]
-allowed-tools: Read, Write, Edit
+allowed-tools: Read, Write, Edit, Bash(ls:*)
 ---
 
-Day $ARGUMENTS, Stage 5. Only after `/review NN` has completed.
+Day $ARGUMENTS, Stage 5.
+
+**Precondition, derived — do not ask.** `dbt_practice_ref/models/dayNN/` must contain at
+least one `.sql` file: that is the residue of `/review` phase 2, and the only proof on
+disk that the reference was actually executed. If the directory is missing or empty,
+STOP — say in Chinese that `/review NN` has not run and there is nothing to digest.
+
+A digest written without a review is a fabricated scorecard. There is no partial version
+of this command.
 
 **This is the only command permitted to write to `docs/05_progress_log.md` and
 `docs/06_key_takeaways.md`.** No other command touches them.
@@ -39,7 +47,8 @@ Then write, in this order:
 4. Append the Key takeaways bullets to `docs/06_key_takeaways.md` under a
    `## Day N — <topic>` heading — one line each, no prose around them
 5. Add any new blindspot rows and parking-lot rows
-6. Set `days/dayNN/STAGE` to `done`
+
+Write no state file. Step 1 and step 2 together are what make the day derive as `done`.
 
 Close in Chinese with: which day is now unlocked, and
 

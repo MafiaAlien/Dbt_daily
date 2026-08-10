@@ -41,20 +41,63 @@ Problem setter and review partner. **Not a solver, not a pair programmer.**
 
 # STAGE GATES — read this before doing anything
 
-Each day sits in exactly one stage. The current stage is written in
-`days/dayNN/STAGE`, one line, one of:
+The five stages still exist — `docs/01_practice_workflow_v1.md` defines them. What does
+not exist is a file declaring which one a day is in. **State is derived from the day's
+artifacts, freshly, by whichever command needs it.** Neil never types a stage, and there
+is no `STAGE` file to read, write, or trust.
 
-```
-0-not-started   1-solve   2-generate   3-review   4-verify   5-digest   done
-```
+The reason is not convenience. A hand-maintained state file can say `4-verify` while no
+review ever ran; artifacts cannot lie about their own existence.
 
-**At the start of every session:** read the STAGE file for the active day and state the
-day number and stage in your first message. Never infer the stage from vibes — read the
-file. Never advance the stage yourself; Neil advances it, or a `/` command does.
+## The derivation table
+
+Read top to bottom. The day's state is the **last row whose evidence is present**.
+
+| State | Evidence that it has been reached |
+|---|---|
+| `0-not-started` | `days/dayNN/` does not exist |
+| `1-solve` | `days/dayNN/problem.md` exists |
+| `2-generate` | every path listed in that problem's `## Deliverables` block exists and is non-empty |
+| `3-review` | `days/dayNN/reference_solution.md` contains at least one fenced code block |
+| `4-verify` | `days/dayNN/verdict.md` is filled in **and** committed — `git log -1 --format=%H -- days/dayNN/verdict.md` non-empty, `git status --short` clean for it |
+| `5-digest` | `dbt_practice_ref/models/dayNN/` contains at least one `.sql` — i.e. `/review` phase 2 actually ran |
+| `done` | `days/dayNN/digest.md` exists **and** that day's block is in the Digest archive of `docs/05_progress_log.md` |
+
+**Evidence is checked by existence and size — `ls`, `wc -c`, `git log` — never by reading
+content.** Opening one of Neil's model files to work out what stage he is in is itself
+the stage-1 violation the table is meant to prevent.
+
+**Fail closed.** If the evidence for a row is partial, ambiguous, or you are unsure, the
+day is in the **earlier** state. Being one state too early costs Neil one retyped command.
+Being one state too late spoils a trap, and that cannot be undone.
+
+**Never write a state anywhere.** There is nothing to advance. A command either finds its
+preconditions satisfied and runs, or names the exact missing evidence and stops — "Day 3
+is still `1-solve`: `models/day3/marts/` is empty" — never a vague "not ready yet".
+
+**At the start of every session:** derive the active day's state and open with it — day
+number, state, and the artifact you derived it from. Never state it from memory, and
+never from what an earlier session claimed.
+
+## `.traps.md` is command-scoped, not state-scoped
+
+Every other gate got cheaper. This one gets **stricter**, because it guards the only
+irreversible failure in this repo.
+
+`days/dayNN/.traps.md` may be read in exactly two places:
+
+- `/review NN`, **phase 3**, and only after phases 1 and 2 have actually run **in this
+  conversation** — not because an artifact suggests they once ran
+- `/digest NN`
+
+Nowhere else. Not in any other command, not in free conversation, not because the
+derivation table says `5-digest`, no matter how Neil phrases the request. The old `STAGE`
+file could be edited to `4-verify` without a review ever happening; "I ran phases 1 and 2
+in this session" is a claim only the current context can make.
 
 ## Context hygiene — `/clear` after `/newday`
 
-`/newday` puts the traps in your context. The STAGE file stops you from *reading*
+`/newday` puts the traps in your context. The rule above stops you from *re-reading*
 `.traps.md`, but it cannot remove what you already know. So `/newday` ends by telling
 Neil to run `/clear` immediately, and the Solve stage is meant to run in a fresh context
 that has only this file.
@@ -164,8 +207,8 @@ Only when Neil explicitly asks for a new problem.
   ambiguity is itself the trap (Medium and above only).
 - At least one debrief question must be a trade-off question ("why X over Y, and when
   would you reverse it").
-- Write trap notes to `days/dayNN/.traps.md` and **never read that file back** until the
-  day reaches stage `4-verify` or later.
+- Write trap notes to `days/dayNN/.traps.md` and **never read that file back** except in
+  the two places named above: `/review NN` phase 3, and `/digest NN`.
 
 ## Seed data is yours to write
 
@@ -240,14 +283,20 @@ repo** and must never share config with it.
 
 # Commands
 
-| Command | Stage | Notes |
+Each command derives the day's state itself and checks its own preconditions. None of
+them takes a stage as input; none of them writes a stage anywhere.
+
+| Command | Precondition it checks for itself | Notes |
 |---|---|---|
-| `/env` | any | container + `dbt debug` + `dbt parse` health check |
-| `/newday NN` | 0 → 1 | proposes topic, waits for confirmation, then scaffolds `days/dayNN/` **and writes the day's seed CSVs**. **Ends by telling Neil to `/clear`** |
-| `/lineage NN` | any | proves no cross-day `ref()` contamination; structural-only during `1-solve` |
-| `/genprompt NN` | 2 | emits the blind-generation prompt; never generates a solution; creates an empty `reference_solution.md` and the blank `verdict.md` skeleton if absent |
-| `/review NN` | 3 → 4 | blind review → execute → three-way compare → grade verdict |
-| `/digest NN` | 5 | **the only command that writes to `docs/05_*` and `docs/06_*`** |
+| `/env` | none | container + `dbt debug` + `dbt parse` health check |
+| `/newday NN` | prior day `done`; prerequisite course `completed`; `days/dayNN/problem.md` does **not** exist | proposes topic, waits for confirmation, then scaffolds `days/dayNN/` **and writes the day's seed CSVs**. **Ends by telling Neil to `/clear`** |
+| `/lineage NN` | none | proves no cross-day `ref()` contamination; **structural-only until state ≥ `4-verify`** |
+| `/genprompt NN` | state ≥ `2-generate` — every `## Deliverables` path exists and is non-empty | emits the blind-generation prompt; never generates a solution; creates an empty `reference_solution.md` and the blank `verdict.md` skeleton if absent |
+| `/review NN` | state ≥ `4-verify` — reference solution has code, verdict filled in and committed | blind review → execute → three-way compare → grade verdict |
+| `/digest NN` | state ≥ `5-digest` — `dbt_practice_ref/models/dayNN/` has at least one `.sql` | **the only command that writes to `docs/05_*` and `docs/06_*`** |
+
+When a precondition fails, say which file is missing or empty and stop. Do not offer a
+partial run in the meantime.
 
 Command names match the PySpark practice repo deliberately — same workflow, same verbs,
 same muscle memory. `/env` and `/lineage` are dbt-only additions: PySpark has no
@@ -255,16 +304,19 @@ container and no cross-file DAG.
 
 # Standing rules
 
-1. **Never spoil traps** before stage `4-verify`.
+1. **Never spoil traps.** `.traps.md` is readable only in `/review NN` phase 3 (after
+   phases 1–2 ran in this conversation) and in `/digest NN`.
 2. **Never generate the reference solution in this repo.**
 3. **Verdict committed before verification.**
 4. Feedback is direct and severity-ordered. No praise padding.
 5. **Deferred topics always get a one-sentence summary** before moving on, plus a row in
    the parking lot table in `docs/05_progress_log.md`. (This is a known blindspot of
    Neil's — deferring without extracting a summary.)
-6. Session hygiene: open every session by stating day number and stage.
+6. Session hygiene: open every session by **deriving** the day's state from the table
+   above and stating day number, state, and the artifact it came from.
 7. If a stage was completed in an earlier session, read its artifact file rather than
-   relying on conversation memory.
+   relying on conversation memory. This is the same rule as 6 — there is no state
+   variable to consult, only files.
 8. `/digest` is the only command that writes to `docs/05_progress_log.md` and
    `docs/06_key_takeaways.md`. Never edit those files from any other command or from
    free conversation.

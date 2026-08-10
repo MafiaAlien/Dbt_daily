@@ -12,8 +12,9 @@ two or three of them on purpose.
 
 ## The workflow
 
-Every day moves through five stages in order. A day's current stage is written in
-`days/dayNN/STAGE`, and stages are never reordered.
+Every day moves through five stages in order, and stages are never reordered. There is no
+file recording which stage a day is in — the stage is derived from which artifacts exist,
+so it cannot drift out of sync with reality or be edited to unlock a step early.
 
 | Stage | What happens |
 |---|---|

@@ -1,15 +1,31 @@
 ---
 description: Emit the blind-generation prompt to paste into an incognito web conversation
 argument-hint: [day number]
-allowed-tools: Read, Write, Glob
+allowed-tools: Read, Write, Glob, Bash(ls:*), Bash(wc:*), Bash(test:*)
 ---
 
 Stage 2 for Day $ARGUMENTS. **You must not produce a reference solution here.** You have
 read this repo; you cannot be blind. Generating one in-repo is a protocol violation even
 if Neil asks directly.
 
-1. Check `days/dayNN/STAGE`. If it is `1-solve`, stop and tell Neil to finish solving
-   and set it to `2-generate` first.
+1. **Derive whether solving is finished — do not ask.** Read the `## Deliverables` fenced
+   block of `days/dayNN/problem.md` and check every path in it with `ls -l` / `wc -c`:
+   each must exist and be non-empty. **Existence and size only — never open one of his
+   model files.** Reading them to judge readiness is the stage-1 violation this command
+   exists downstream of.
+
+   If any is missing or zero-byte, STOP and name them exactly:
+   *"Day 3 还在 `1-solve`：`models/day3/marts/fct_d3_x.sql` 不存在。"* Do not emit the
+   prompt, do not create any file.
+
+   Two things this check deliberately does **not** do: it does not run `dbt build`, and
+   it does not care whether his tests are green. A red test is a legitimate reason to
+   move on — the reference comparison is what settles it.
+
+   Then check `days/dayNN/notes.md` and, if it is empty or has no content under its
+   headings, **warn once in Chinese and continue** — a blank `notes.md` is a logged
+   recurring blindspot (Day 2), not a gate.
+
 2. Output ONE copyable fenced block containing:
    - the standard generation prompt verbatim from
      `docs/02_problem_format_and_templates.md` section 3, then

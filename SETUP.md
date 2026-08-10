@@ -25,13 +25,12 @@ dbt-daily-practice/                 <- open Claude Code here (repo root)
 │   └── 06_key_takeaways.md         <- cumulative, bullets only, git-diffed daily
 ├── days/                           <- per-day prose artifacts
 │   └── day1/
-│       ├── STAGE                   <- single line: current stage
-│       ├── problem.md
+│       ├── problem.md              <- its existence is what marks the day as started
 │       ├── notes.md                <- assumptions + debrief answers
 │       ├── reference_solution.md   <- pasted back from the incognito session
-│       ├── verdict.md              <- MUST be committed before /verify
+│       ├── verdict.md              <- MUST be committed before /review
 │       ├── digest.md
-│       └── .traps.md               <- written at problem time, not read until Stage 4
+│       └── .traps.md               <- written at problem time, read only in /review p3
 ├── scripts/
 │   └── newday.sh
 ├── docker-compose.yml              <- from docs/03
@@ -77,18 +76,32 @@ commands are visible only inside their own repo, so `/digest` in this repo and `
 in the PySpark repo never collide — the only thing that matters is which directory you
 opened Claude Code in.
 
-## 3. The STAGE file
+## 3. Stages are derived, not declared
 
-One line, one of:
+There is no `STAGE` file and nothing to type. Each command works out where the day stands
+from the artifacts on disk, then either runs or names the exact file that is missing:
 
 ```
-0-not-started   1-solve   2-generate   3-review   4-verify   5-digest   done
+0-not-started   days/dayNN/ does not exist
+1-solve         problem.md exists
+2-generate      every path in problem.md's ## Deliverables exists and is non-empty
+3-review        reference_solution.md contains a fenced code block
+4-verify        verdict.md is filled in AND committed to git
+5-digest        dbt_practice_ref/models/dayNN/ contains a .sql  (i.e. /review ran)
+done            digest.md exists AND is in the Digest archive of docs/05
 ```
 
-This is the single source of truth for what Claude is allowed to do. Claude reads it
-and never writes it except at the end of `/verify` and `/digest`. If you get an answer
-that feels too helpful for the stage you are in, check this file first — a stale
-`0-not-started` is the most likely cause.
+The full table lives in `CLAUDE.md`. Two properties matter:
+
+- **Evidence is checked by existence and size, never by reading content.** Opening one of
+  your model files to work out the stage would itself be the Stage 1 violation.
+- **Ambiguity resolves to the earlier stage.** Being one stage too early costs you a
+  retyped command; being one stage too late spoils a trap.
+
+`.traps.md` is the exception to all of this: it is bound to a *command*, not a stage —
+readable only inside `/review NN` phase 3, after phases 1 and 2 have actually run in that
+same conversation, and inside `/digest NN`. A state file could be edited to say
+`4-verify` with no review behind it; an in-session claim cannot be forged that way.
 
 ## 4. A day, end to end
 
@@ -103,8 +116,7 @@ docker compose exec dbt dbt build --select path:models/dayNN
 /lineage NN                       结构检查：上游有没有混进别的天
         |                         自己跑，直到 build 绿 + 输出对得上
         v
-STAGE -> 2-generate
-/genprompt NN                     输出一段 prompt
+/genprompt NN                     自动检查 Deliverables 是否都写了，再输出一段 prompt
   -> 复制到 web 端 incognito 对话，拿 AI 解
   -> 原样贴进 reference_solution.md，不要改一个字
         |

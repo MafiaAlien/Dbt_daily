@@ -7,11 +7,14 @@ allowed-tools: Read, Write, Edit, Glob, Bash(mkdir:*), Bash(ls:*), Bash(docker c
 Set up Day $ARGUMENTS. If no number was given, use the next unstarted day in
 `docs/04_curriculum_backlog.md`.
 
-## Gates — stop and report in Chinese if either fails
+## Gates — stop and report in Chinese if any fails
 
 1. The previous day's digest is present in the Digest archive of `docs/05_progress_log.md`.
 2. The course gating this day's block in `docs/04_curriculum_backlog.md` is marked
    `completed` in `docs/05_progress_log.md`.
+3. `days/dayNN/problem.md` does **not** already exist. If it does, this day is already
+   set up — say which state it is in per the derivation table in `CLAUDE.md` and stop.
+   Never overwrite a problem file: the seeds are frozen once solving starts.
 
 ## Propose first, then build
 
@@ -45,7 +48,10 @@ re-exercising it and say so.
 5. `days/dayNN/.traps.md` — the trap list, with what a naive solution does and which
    test catches it.
 6. `days/dayNN/notes.md` — headings `## Assumptions` and `## Debrief answers`.
-7. `days/dayNN/STAGE` — containing `1-solve`.
+
+Do **not** write a `STAGE` file. There is no such file. Once `problem.md` exists and the
+`## Deliverables` paths are still empty, the derivation table in `CLAUDE.md` reads the
+day as `1-solve` on its own.
 
 ## Close
 

@@ -13,7 +13,7 @@ mkdir -p "$ROOT/dbt_practice/seeds/day${D}"
 [ "$LEVEL" = "easy" ] || mkdir -p "$ROOT/dbt_practice/models/day${D}/intermediate"
 
 mkdir -p "$ROOT/days/day${D}"
-[ -f "$ROOT/days/day${D}/STAGE" ] || echo "0-not-started" > "$ROOT/days/day${D}/STAGE"
+# No STAGE file: the day's stage is derived from its artifacts. See CLAUDE.md.
 [ -f "$ROOT/days/day${D}/notes.md" ] || printf '## Assumptions\n\n## Debrief answers\n' \
   > "$ROOT/days/day${D}/notes.md"
 
