@@ -1,10 +1,13 @@
 ---
 description: Prove a day's DAG has no cross-day contamination
-argument-hint: [day number]
+argument-hint: "[day number — optional]"
 allowed-tools: Read, Glob, Bash(docker compose:*), Bash(grep:*), Bash(git log:*), Bash(git status:*), Bash(ls:*)
 ---
 
-Day $ARGUMENTS. Verify the day's models depend only on that day's resources.
+`$ARGUMENTS` is **optional** — resolve `NN` per **Which day** in `CLAUDE.md` and state
+which day you resolved if it was not typed.
+
+Verify the day's models depend only on that day's resources.
 
 `ref()` resolves by **resource name, not directory**. Putting files in `models/dayNN/`
 guarantees nothing — a typo'd `ref('stg_d2_orders')` inside a day-3 model compiles

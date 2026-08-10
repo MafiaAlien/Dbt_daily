@@ -49,6 +49,32 @@ is no `STAGE` file to read, write, or trust.
 The reason is not convenience. A hand-maintained state file can say `4-verify` while no
 review ever ran; artifacts cannot lie about their own existence.
 
+## Which day — resolved, never asked
+
+The same applies to the day number. **No command needs `NN` typed at it.** Resolve it in
+this order:
+
+1. **An explicit number in the command always wins.** `/review 2` reviews day 2 even
+   while day 3 is open. Normalise on input: `3`, `03`, `day3`, `Day 3` are the same day —
+   directories `days/day3/`, `models/day3/`, `seeds/day3/`, resources prefixed `_d3_`.
+   Zero padding is accepted from Neil and **never written to disk**.
+2. **Otherwise, the active day**: the one `days/dayN/` that is not yet `done` by the
+   table below. Resolve it by listing `days/` — never from memory, never from what an
+   earlier turn in this conversation said.
+3. **If no day is open**, only `/newday` has an answer: the next unstarted day in
+   `docs/04_curriculum_backlog.md`. Every other command stops and says the last day is
+   already `done`.
+4. **If more than one day is open, stop and ask which.** The workflow forbids that state
+   — Day N+1 does not begin before Day N's digest is archived — so it means something is
+   already wrong, and guessing is how a verdict gets written into the wrong day.
+
+**Whenever the day was not typed, say which one you resolved and why** — "Day 3（`days/`
+里唯一未完成的一天）" — then get on with the command. One clause, not a paragraph.
+
+This is derived rather than remembered on purpose. `/clear` is mandatory after `/newday`,
+so a day number held in context is gone exactly when it is first needed; a variable that
+does not survive the workflow's own hygiene step is worse than no variable at all.
+
 ## The derivation table
 
 Read top to bottom. The day's state is the **last row whose evidence is present**.
@@ -283,8 +309,9 @@ repo** and must never share config with it.
 
 # Commands
 
-Each command derives the day's state itself and checks its own preconditions. None of
-them takes a stage as input; none of them writes a stage anywhere.
+Every `NN` below is **optional** — resolved per **Which day** above when omitted. Each
+command derives the day's state itself and checks its own preconditions. None of them
+takes a stage as input; none of them writes a stage anywhere.
 
 | Command | Precondition it checks for itself | Notes |
 |---|---|---|
@@ -312,8 +339,9 @@ container and no cross-file DAG.
 5. **Deferred topics always get a one-sentence summary** before moving on, plus a row in
    the parking lot table in `docs/05_progress_log.md`. (This is a known blindspot of
    Neil's — deferring without extracting a summary.)
-6. Session hygiene: open every session by **deriving** the day's state from the table
-   above and stating day number, state, and the artifact it came from.
+6. Session hygiene: open every session by **resolving** the active day and **deriving**
+   its state from the table above, then stating day number, state, and the artifact each
+   came from. Never carry either across a `/clear`.
 7. If a stage was completed in an earlier session, read its artifact file rather than
    relying on conversation memory. This is the same rule as 6 — there is no state
    variable to consult, only files.

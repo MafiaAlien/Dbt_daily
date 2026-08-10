@@ -1,10 +1,13 @@
 ---
 description: Emit the blind-generation prompt to paste into an incognito web conversation
-argument-hint: [day number]
+argument-hint: "[day number — optional]"
 allowed-tools: Read, Write, Glob, Bash(ls:*), Bash(wc:*), Bash(test:*)
 ---
 
-Stage 2 for Day $ARGUMENTS. **You must not produce a reference solution here.** You have
+Stage 2. `$ARGUMENTS` is **optional** — resolve `NN` per **Which day** in `CLAUDE.md` and
+state which day you resolved if it was not typed.
+
+**You must not produce a reference solution here.** You have
 read this repo; you cannot be blind. Generating one in-repo is a protocol violation even
 if Neil asks directly.
 

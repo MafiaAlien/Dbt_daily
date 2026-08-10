@@ -10,8 +10,9 @@ no essay.
 2. Connection: `docker compose exec dbt dbt debug`. Report the adapter and dbt versions.
 3. Parse: `docker compose exec dbt dbt parse`. This catches duplicate resource names
    across days — the failure mode the `_dNN_` prefix convention exists to prevent.
-4. The active day has a `dayNN:` block under `models: dbt_practice:` in
-   `dbt_practice/dbt_project.yml`, and its directories exist.
+4. The active day — resolved per **Which day** in `CLAUDE.md`, and named in the report —
+   has a `dayNN:` block under `models: dbt_practice:` in `dbt_practice/dbt_project.yml`,
+   and its directories exist.
 5. Whether `practice.duckdb` exists, and its mtime.
 6. Reference project reachable: `docker compose exec -w /workspace_ref dbt dbt debug`,
    and its `dayNN:` block matches the one in `dbt_practice/dbt_project.yml`. A drifted

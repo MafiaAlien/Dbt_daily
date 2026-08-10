@@ -1,10 +1,11 @@
 ---
 description: Write the digest and update the logs — the only command that writes logs
-argument-hint: [day number]
+argument-hint: "[day number — optional]"
 allowed-tools: Read, Write, Edit, Bash(ls:*)
 ---
 
-Day $ARGUMENTS, Stage 5.
+Stage 5. `$ARGUMENTS` is **optional** — resolve `NN` per **Which day** in `CLAUDE.md` and
+state which day you resolved if it was not typed.
 
 **Precondition, derived — do not ask.** `dbt_practice_ref/models/dayNN/` must contain at
 least one `.sql` file: that is the residue of `/review` phase 2, and the only proof on

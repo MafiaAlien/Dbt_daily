@@ -1,11 +1,14 @@
 ---
 description: Blind review, then execute, then three-way compare, then grade Neil's verdict
-argument-hint: [day number]
-allowed-tools: Read, Write, Edit, Glob, Bash(git log:*), Bash(git status:*), Bash(docker compose:*), Bash(cp:*), Bash(mkdir:*)
+argument-hint: "[day number — optional]"
+allowed-tools: Read, Write, Edit, Glob, Bash(git log:*), Bash(git status:*), Bash(docker compose:*), Bash(cp:*), Bash(mkdir:*), Bash(ls:*)
 ---
 
-Day $ARGUMENTS. This command covers Stage 3 and Stage 4. **Run the four phases in
-order. Do not read ahead, do not reorder, do not execute anything before Phase 2.**
+`$ARGUMENTS` is **optional** — resolve `NN` per **Which day** in `CLAUDE.md` and state
+which day you resolved if it was not typed.
+
+This command covers Stage 3 and Stage 4. **Run the four phases in order. Do not read
+ahead, do not reorder, do not execute anything before Phase 2.**
 
 ## Gate
 

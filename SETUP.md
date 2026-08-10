@@ -103,20 +103,30 @@ readable only inside `/review NN` phase 3, after phases 1 and 2 have actually ru
 same conversation, and inside `/digest NN`. A state file could be edited to say
 `4-verify` with no review behind it; an in-session claim cannot be forged that way.
 
-## 4. A day, end to end
+## 4. The day number is resolved too
+
+`NN` is optional on every command. Omitted, it resolves to the one `days/dayN/` that is
+not yet `done` — `/newday` alone resolves to the *next* unstarted day instead. An explicit
+number always wins (`/review 2` while day 3 is open), `03` and `3` are the same day, and
+if two days are somehow open at once the command stops and asks rather than guessing.
+
+It is derived from `days/`, not remembered. `/clear` is mandatory after `/newday`, which
+is exactly when a remembered number would be lost.
+
+## 5. A day, end to end
 
 ```
 /env                              容器 + dbt debug + dbt parse
-/newday NN                        Claude 提议选题 → 你确认 → 生成 problem.md + .traps.md
+/newday                           Claude 提议选题 → 你确认 → 生成 problem.md + .traps.md
 /clear                            ★ 必须。traps 现在在上下文里
         |
         v
  （自己写 models/dayNN/ 的 staging + marts + schema.yml）
 docker compose exec dbt dbt build --select path:models/dayNN
-/lineage NN                       结构检查：上游有没有混进别的天
+/lineage                          结构检查：上游有没有混进别的天
         |                         自己跑，直到 build 绿 + 输出对得上
         v
-/genprompt NN                     自动检查 Deliverables 是否都写了，再输出一段 prompt
+/genprompt                        自动检查 Deliverables 是否都写了，再输出一段 prompt
   -> 复制到 web 端 incognito 对话，拿 AI 解
   -> 原样贴进 reference_solution.md，不要改一个字
         |
@@ -125,8 +135,8 @@ docker compose exec dbt dbt build --select path:models/dayNN
 git add days/dayNN/verdict.md && git commit -m "day NN verdict"
         |
         v
-/review NN                        Claude 也先盲审 -> 实跑 -> 三方对比 -> 批改你的 verdict
-/digest NN                        更新 05 和 06（唯一会写 log 的命令）
+/review                           Claude 也先盲审 -> 实跑 -> 三方对比 -> 批改你的 verdict
+/digest                           更新 05 和 06（唯一会写 log 的命令）
         |
         v
 git diff docs/06_key_takeaways.md    ★ 十秒钟，只看新增行
@@ -137,7 +147,7 @@ Same shape as the PySpark repo. The two dbt-only steps are `/env` (there is a co
 to be alive or not) and `/lineage` (there is a cross-file DAG that can silently point at
 the wrong day).
 
-## 5. What Claude Code changes, and what it doesn't
+## 6. What Claude Code changes, and what it doesn't
 
 **Changes:** no more pasting SQL and YAML into chat. Claude reads
 `dbt_practice/models/dayN/` directly, runs `dbt build` in the container, and edits
@@ -148,14 +158,14 @@ your solution cannot produce an independent reference answer — that is the ent
 of the blind-generation protocol, and file access makes it stricter, not looser. Use
 an incognito conversation, as before.
 
-## 6. Guardrails worth knowing about
+## 7. Guardrails worth knowing about
 
 - **`/clear` right after `/newday` is the real trap protection.** `.traps.md` being
   hidden and CLAUDE.md forbidding it are soft guardrails — ask directly and Claude
   complies. `/clear` is different in kind: it removes the traps from context entirely.
   Do not skip it because the day "feels easy".
 - **Git is the enforcement mechanism for verdict-before-verification.** An uncommitted
-  verdict can be silently edited after seeing results; a committed one cannot. `/verify`
+  verdict can be silently edited after seeing results; a committed one cannot. `/review`
   checks `git log` before running anything.
 - **Never run `dbt` on the host.** All commands go through
   `docker compose exec dbt …`. dbt and DuckDB must share a process space.

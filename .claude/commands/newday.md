@@ -1,11 +1,13 @@
 ---
 description: Propose and scaffold a new practice day
-argument-hint: [day number]
+argument-hint: "[day number — optional]"
 allowed-tools: Read, Write, Edit, Glob, Bash(mkdir:*), Bash(ls:*), Bash(docker compose exec dbt dbt seed:*)
 ---
 
-Set up Day $ARGUMENTS. If no number was given, use the next unstarted day in
-`docs/04_curriculum_backlog.md`.
+Set up a day. `$ARGUMENTS` is **optional**: resolve `NN` per **Which day** in
+`CLAUDE.md`. With no argument that means the next unstarted day in
+`docs/04_curriculum_backlog.md` — never the currently open one. Normalise `03` to `day3`
+/ `_d3_`, and say which day you resolved before proposing anything.
 
 ## Gates — stop and report in Chinese if any fails
 
