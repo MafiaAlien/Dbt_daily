@@ -1,0 +1,8 @@
+SUBSCRIPTION_ID,ACCOUNT_ID,PLAN_CODE,STATUS,STARTED_ON
+S001,A100,starter,active,2026-01-15
+S002,A101,growth,active,2026-01-20
+S003,A102,growth,churned,2026-02-01
+S004,A103,scale,active,2026-02-10
+S005,A104,starter,trialing,2026-03-01
+S006,A105,enterprise,active,2026-03-05
+S007,A106,scale,churned,2026-03-12

@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: fct_d3_plan_usage
+    description: "One row per plan_code present in stg_d3_subscriptions."
+    columns:
+      - name: plan_code
+        description: "Grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: subscription_count
+        description: "Subscriptions on this plan, any status."
+        data_tests:
+          - not_null
+      - name: active_subscription_count
+        description: "Active subscriptions on this plan. Zero if none."
+        data_tests:
+          - not_null
+      - name: billable_event_count
+        description: "Billable events on active subscriptions. Zero if none. Counts events with a missing units value."
+        data_tests:
+          - not_null
+      - name: billable_units
+        description: "Billable units on active subscriptions. Zero if none. Never null."
+        data_tests:
+          - not_null
+
+  - name: dim_d3_plan_current
+    description: "One row per plan in the catalogue, including plans with no subscriptions."
+    columns:
+      - name: plan_code
+        description: "Grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: plan_name
+        description: "Display name of the plan."
+        data_tests:
+          - not_null
+      - name: tier
+        description: "Pricing tier the plan belongs to."
+        data_tests:
+          - not_null
+      - name: is_custom_priced
+        description: "True when the plan has no list price."
+        data_tests:
+          - not_null

@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: int_d3_billable_usage
+    description: "One row per billable usage event on an active subscription. Ephemeral — inlined as a CTE, never built."
+    columns:
+      - name: event_id
+        description: "Grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: plan_code
+        description: "Plan the event's subscription is on."
+        data_tests:
+          - not_null

@@ -19,3 +19,9 @@ only the new lines. Ten seconds.
 - staging 模型最后一句写 `select *`，会把去重用的 helper 列（`row_number` 的 `rn`）一起发布出去；模型契约说 7 列，实际 8 列，而 `unique` / `not_null` / `accepted_values` **没有一个**检查列的集合。排名放在哪个 CTE 都行，最终 select 必须逐列重列。
 - source 不是 dbt 建的 node：`source()` 在 DAG 上没有上游边，`--select path:models/dayNN` 不会重建它，上游坏了 dbt 也不会告诉你——`dbt source freshness` 是唯一的哨兵。同理，`unique` 该挂在去重后的 staging model 上而不是 source 上：test 挂在 source 上断言的是**上游系统的保证**，挂在 model 上断言的是**这个模型自己的保证**。
 
+## Day 3 — materialization trade-offs: view vs table vs ephemeral, config precedence
+
+- 维度计数必须在**维度自己的 grain 上聚合完**再 left join 事实表。`subscriptions left join usage_events` 之后的 CTE，grain 已经是 (订阅×事件)，此时 `count(*)` 数的是 join 行数，每个订阅按它的事件条数被放大；`sum(case when status='active' then 1 else 0 end)` 同样被放大。正确形状是两段式：先 `group by plan_code` 把订阅聚成一行，再把用量聚合 left join 上去 —— 一次 join 只允许一边是"多"。
+- boolean 列上写 `x is not null` 是**空值检查**，不是真值检查；只要该列非空（而 `not_null` test 正保证了它非空），这个谓词恒为真，一行都滤不掉。要过滤真值只有 `where x` 或 `x is true`。同理 `count(x)` 跳过 NULL 而 `count(*)` 不跳 —— 谓词和聚合函数各有各的 NULL 语义，不能靠一条统一规则覆盖。
+- materialization 优先级：in-model `{{ config() }}` > `dbt_project.yml` 里更具体的路径 > 更一般的路径 > 项目默认。同一个目录里要两种物化时，目录级 config 表达不了，只能用 in-model override —— 这是它唯一正当的用途。反过来，在**每个**模型里都写死 config，会让一次有意的项目级变更（比如把所有 marts 改成 incremental）静默失效：你以为改了，实际一个都没生效。
+

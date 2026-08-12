@@ -1,0 +1,6 @@
+PLAN_CODE,PLAN_NAME,TIER,MONTHLY_PRICE_USD
+starter,Starter,entry,29.00
+growth,Growth,mid,99.50
+scale,Scale,mid,299.00
+enterprise,Enterprise,top,
+legacy_basic,Legacy Basic,entry,19.99

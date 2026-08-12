@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: stg_d3_plans
+    description: "One row per plan_code. 1:1 with the plan catalogue seed."
+    columns:
+      - name: plan_code
+        description: "Natural key of the plan, and the grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: plan_name
+        description: "Display name of the plan."
+        data_tests:
+          - not_null
+      - name: tier
+        description: "Pricing tier the plan belongs to."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["entry", "mid", "top"]
+      - name: monthly_price_usd
+        description: "List price. NULL means custom-priced — deliberately not tested for nullability."
+
+  - name: stg_d3_subscriptions
+    description: "One row per subscription_id. 1:1 with the subscription seed."
+    columns:
+      - name: subscription_id
+        description: "Natural key of the subscription, and the grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: plan_code
+        description: "Plan this subscription is on."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_d3_plans')
+                field: plan_code
+      - name: status
+        description: "Lifecycle state of the subscription."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["active", "churned", "trialing"]
+
+  - name: stg_d3_usage_events
+    description: "One row per event_id. 1:1 with the usage event seed."
+    columns:
+      - name: event_id
+        description: "Natural key of the event, and the grain of this model."
+        data_tests:
+          - unique
+          - not_null
+      - name: subscription_id
+        description: "Subscription the event was metered against."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_d3_subscriptions')
+                field: subscription_id
+      - name: is_billable
+        description: "Whether this event is eligible to be charged for."
+        data_tests:
+          - not_null
+      - name: units
+        description: "Metered quantity. NULL where the meter reported no quantity — deliberately not tested for nullability."

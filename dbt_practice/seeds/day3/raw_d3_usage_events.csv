@@ -1,0 +1,15 @@
+EVENT_ID,SUBSCRIPTION_ID,EVENT_DATE,METRIC,UNITS,IS_BILLABLE
+E0001,S001,2026-03-01,api_calls,1200,true
+E0002,S001,2026-03-02,api_calls,800,true
+E0003,S001,2026-03-02,storage_gb,15,false
+E0004,S002,2026-03-01,api_calls,5000,true
+E0005,S002,2026-03-03,api_calls,,true
+E0006,S002,2026-03-04,storage_gb,40,true
+E0007,S003,2026-03-01,api_calls,9000,true
+E0008,S004,2026-03-02,storage_gb,120,false
+E0009,S004,2026-03-05,storage_gb,60,false
+E0010,S005,2026-03-01,api_calls,300,true
+E0011,S006,2026-03-03,api_calls,,true
+E0012,S006,2026-03-06,api_calls,,true
+E0013,S007,2026-03-07,api_calls,700,true
+E0014,S001,2026-03-08,api_calls,450,true

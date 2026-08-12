@@ -37,6 +37,12 @@ models:
         +materialized: view
       marts:
         +materialized: table
+    # Mirrors dbt_practice/dbt_project.yml exactly. Day 3 is about materialization
+    # config; a drift here would change what the reference run proves.
+    day3:
+      +materialized: view
+      marts:
+        +materialized: table
 
 seeds:
   dbt_practice_ref:

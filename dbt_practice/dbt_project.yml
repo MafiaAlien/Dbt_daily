@@ -25,6 +25,13 @@ models:
         +materialized: view
       marts:
         +materialized: table
+    # Day 3 is about materialization config itself. This block is deliberately NOT a
+    # complete specification of the day — read days/day3/problem.md for what each model
+    # must be, and work out which lever gets you there.
+    day3:
+      +materialized: view
+      marts:
+        +materialized: table
 
 seeds:
   dbt_practice:
