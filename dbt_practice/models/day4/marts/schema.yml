@@ -1,0 +1,27 @@
+version: 2
+models:
+  - name: fct_d4_seller_payouts
+    description: pass
+    columns:
+      - name: paid_amount
+        description: sum of payout_amount over this seller's 'PAID' payouts only. Zero if the seller has none. Type decimal(12,2).Never null
+        data_tests:
+          - not_null
+          - not_negative 
+
+      - name: seller_id 
+        data_tests:
+          - unique
+          - not_null 
+      
+      - name: payout_count
+        data_tests:
+          - not_null 
+      
+      - name: paid_payout_count 
+        data_tests:
+          - not_null 
+
+      - name: line_count
+        data_tests:
+          - not_null

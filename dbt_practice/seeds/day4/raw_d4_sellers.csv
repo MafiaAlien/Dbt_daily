@@ -1,0 +1,5 @@
+SELLER_ID,SELLER_NAME,COUNTRY,IS_ACTIVE
+SL01,Northwind Crafts,US,true
+SL02,Baltic Timber,DE,true
+SL03,Thames Bindery,GB,false
+SL04,Andes Textiles,PE,true

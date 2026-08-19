@@ -33,6 +33,12 @@ models:
       marts:
         +materialized: table
 
+    day4:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: table
+
 seeds:
   dbt_practice:
     +quote_columns: false

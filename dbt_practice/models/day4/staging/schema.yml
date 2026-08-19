@@ -1,0 +1,105 @@
+version: 2
+models:
+  - name: stg_d4_sellers
+    description: pass
+    columns:
+      - name: seller_id 
+        description: seller id 
+        data_tests:
+          - not_null 
+          - unique
+      
+      - name: seller_name 
+        description: seller name of unique seller id 
+        data_tests:
+          - not_null 
+      
+      - name: country 
+        description: country of seller 
+        data_tests:
+          - accepted_values: 
+              arguments:
+                values: ['US', 'DE', 'GB', 'PE']
+
+  - name: stg_d4_payouts.sql
+    description: info of payouts
+    columns:
+      - name: payout_id
+        description: payout_id belonging to a seller
+        data_tests:
+          - not_null 
+          - unique
+      
+      - name: seller_id
+        description: a seller_id to this line 
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_d4_sellers')
+                field: seller_id
+      
+      - name: status 
+        data_tests:
+          - not_null 
+          - accepted_values:
+              arguments:
+                values: ['PAID', 'PENDING', 'FAILED']
+      
+      - name: currency
+        data_tests:
+          - not_null 
+          - accepted_values:
+              arguments:
+                values: ['USD', 'EUR', 'GBP']
+
+      - name: payout_amount 
+        data_tests:
+          - not_null 
+          - not_negative:
+              config: 
+                severity: warn 
+            
+
+  - name: stg_d4_payout_lines
+    description: pass
+    columns:
+      - name: line_id 
+        description: line id
+        data_tests:
+          - not_null
+          - unique
+      
+      - name: payout_id  
+        description: payout_id of this line
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_d4_payouts')
+                field: payout_id
+          - not_null:
+              config: 
+                severity: warn 
+
+      - name: currency
+        data_tests:
+          - not_null 
+          - accepted_values:
+              arguments:
+                values: ['USD', 'EUR', 'GBP']
+              config: 
+                severity: warn 
+      
+      - name: payment_method
+        data_tests:
+          - not_null:
+              config: 
+                severity: warn 
+      
+      - name: line_amount 
+        data_tests:
+          - not_null
+          - not_negative
+
+
+    

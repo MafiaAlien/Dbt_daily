@@ -44,6 +44,12 @@ models:
       marts:
         +materialized: table
 
+    day4:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: table
+
 seeds:
   dbt_practice_ref:
     +quote_columns: false
