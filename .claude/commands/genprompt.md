@@ -61,24 +61,13 @@ Written before any execution.
 
 ## Material differences
 
-<!-- One block per difference. This is the section that gets scored. -->
+<!-- One bullet per difference. This is the section that gets scored. -->
 <!-- A "difference" includes anything the reference does that mine does not do at all. -->
+<!-- Every bullet must name a call — reference / mine / equivalent — and say why: -->
+<!-- mechanism, not taste, i.e. what input would make the losing version wrong. -->
+<!-- Where execution can settle it, name the test or the row of Expected Output. -->
 
-### D1 — <one-line title>
-
-- **Reference does:**
-- **I did:**
-- **Call:** reference / mine / equivalent
-- **Why:** <mechanism, not taste. What input would make the losing version wrong?>
-- **How execution would settle it:** <which test, or which row of Expected Output>
-
-### D2 — <one-line title>
-
-- **Reference does:**
-- **I did:**
-- **Call:**
-- **Why:**
-- **How execution would settle it:**
+-
 
 ## My own solution — where I think it is wrong
 

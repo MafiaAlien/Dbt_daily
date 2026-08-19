@@ -28,10 +28,10 @@ uncommitted verdict can be edited after seeing results, which destroys the score
 `/genprompt` scaffolds an empty skeleton, so **non-empty is not the test.** Read the file
 and STOP unless all three hold:
 
-- at least one `### D` block under `Material differences`, with a **Call** that names
-  `reference` / `mine` / `equivalent` — not blank, not a description
+- at least one real bullet under `Material differences`, and **every** bullet there
+  names a call — `reference` / `mine` / `equivalent` — not blank, not a description
 - `My own solution — where I think it is wrong` has real content
-- no unreplaced placeholder (`<one-line title>`, `<list or "none">`, a bare `-`)
+- no unreplaced placeholder (`<list or "none">`, a bare `-`)
 
 A committed skeleton satisfies "exists and committed" while settling nothing. Say plainly
 which section is still empty; do not offer partial review in the meantime.
