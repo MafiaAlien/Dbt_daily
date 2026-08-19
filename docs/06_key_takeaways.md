@@ -25,3 +25,8 @@ only the new lines. Ten seconds.
 - boolean 列上写 `x is not null` 是**空值检查**，不是真值检查；只要该列非空（而 `not_null` test 正保证了它非空），这个谓词恒为真，一行都滤不掉。要过滤真值只有 `where x` 或 `x is true`。同理 `count(x)` 跳过 NULL 而 `count(*)` 不跳 —— 谓词和聚合函数各有各的 NULL 语义，不能靠一条统一规则覆盖。
 - materialization 优先级：in-model `{{ config() }}` > `dbt_project.yml` 里更具体的路径 > 更一般的路径 > 项目默认。同一个目录里要两种物化时，目录级 config 表达不了，只能用 in-model override —— 这是它唯一正当的用途。反过来，在**每个**模型里都写死 config，会让一次有意的项目级变更（比如把所有 marts 改成 incremental）静默失效：你以为改了，实际一个都没生效。
 
+## Day 4 — test design: translating a written data contract into a test suite
+
+- 四个内置 generic test 里，只有 `not_null` 回答"值在不在"，其余三个只回答"值对不对"，且排除 NULL 的机制不同：`unique` 和 `relationships` 的编译产物里**明写**着 `where <column> is not null`（前者不让 NULL 参与唯一性，后者只断言"出现过的值必须在 parent 存在"），而 `accepted_values` 靠三值逻辑 —— `NULL not in ('A','B')` 求值为 NULL 而非 TRUE，被 `WHERE` 挡掉。所以一列的完整合约通常要拆成两个断言，而且两个断言可以有各自的 severity：同一列上 `not_null` 设 warn（已知缺陷、必须报不许拦）+ `accepted_values` 留 error（真出现非法值就 fail）。
+- `severity` 是天花板，不是默认值。dbt 源码 `task/test.py` 里判定只有一条路径能 fail：`if severity == "ERROR" and result.should_error`。所以 `severity: warn` 配上 `error_if: ">10"`，`error_if` 被完全架空，永远最多是 WARN;阈值写法必须建立在 `severity: error` 之上（`severity: error` + `warn_if: ">0"` + `error_if: ">10"`）。另外 severity 只在测试**返回了行**之后才被咨询 —— 返回 0 行时 error 和 warn 没有任何区别，改 severity 治不了"测试根本抓不到这一行"。
+- 自定义 generic test 的**目录决定了 dbt 怎么解释这个文件**：定义只在 `macros/` 和 test-path 根下的 `generic/`（即 `tests/generic/`）被识别，放进 `tests/dayNN/generic/` 这样深一层的目录不算。放错的后果有两层，且都不在 parse 阶段暴露 —— 文件被当成 singular test，`{% test %}` 块只是定义、不输出任何文本，渲染成空字符串后被塞进 `select ... from ( ) dbt_internal_test`，报 `syntax error at or near ")"`；同时每一条引用它的断言在**执行**时各自变成一个 `'test_xxx' is undefined` 的 Compilation Error。`dbt compile` 打出空的编译产物，就是这个形状的指纹。

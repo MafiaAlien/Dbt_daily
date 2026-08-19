@@ -21,7 +21,7 @@ models:
               arguments:
                 values: ['US', 'DE', 'GB', 'PE']
 
-  - name: stg_d4_payouts.sql
+  - name: stg_d4_payouts
     description: info of payouts
     columns:
       - name: payout_id
@@ -77,25 +77,28 @@ models:
               arguments:
                 to: ref('stg_d4_payouts')
                 field: payout_id
+              config: 
+                severity: warn 
           - not_null:
               config: 
                 severity: warn 
 
       - name: currency
         data_tests:
-          - not_null 
-          - accepted_values:
-              arguments:
-                values: ['USD', 'EUR', 'GBP']
-              config: 
-                severity: warn 
-      
-      - name: payment_method
-        data_tests:
           - not_null:
               config: 
                 severity: warn 
+          - accepted_values:
+              arguments:
+                values: ['USD', 'EUR', 'GBP']
+              
       
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments: 
+                values: ['bank_transfer', 'paypal', 'wise']
+                      
       - name: line_amount 
         data_tests:
           - not_null

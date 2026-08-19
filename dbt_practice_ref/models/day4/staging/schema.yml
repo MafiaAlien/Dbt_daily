@@ -1,0 +1,149 @@
+version: 2
+
+models:
+
+  - name: stg_d4_sellers
+    description: >
+      Seller master, one row per seller_id. Rename-and-cast passthrough of
+      raw_d4_sellers. Enforces contract clauses C1-C3; C4 (is_active) is
+      deliberately untested because the contract makes no guarantee about it.
+    columns:
+
+      - name: seller_id
+        description: "Primary key. Unique and always present (C1)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: seller_name
+        description: "Display name of the seller. Always present (C2)."
+        data_tests:
+          - not_null
+
+      - name: country
+        description: >
+          ISO-style market code. Always present and restricted to the four
+          markets the marketplace operates in (C3).
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['US', 'DE', 'GB', 'PE']
+
+      - name: is_active
+        description: >
+          Descriptive activity flag. The contract makes no guarantee about this
+          column, so it carries no tests by design (C4).
+
+  - name: stg_d4_payouts
+    description: >
+      Payout header feed, one row per payout_id. Rename-and-cast passthrough of
+      raw_d4_payouts. Enforces C5-C9.
+    columns:
+
+      - name: payout_id
+        description: "Primary key. Unique and always present (C5)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: seller_id
+        description: >
+          Owning seller. Always present, and must exist in the seller master
+          (C6). Split into two assertions so a failure names either a missing
+          value or a broken reference, not both.
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d4_sellers')
+              field: seller_id
+
+      - name: payout_date
+        description: "Date the payout was issued. Not covered by the contract."
+
+      - name: status
+        description: "Lifecycle status. Always present, one of PAID / PENDING / FAILED (C7)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['PAID', 'PENDING', 'FAILED']
+
+      - name: currency
+        description: "Settlement currency of the header. Always present, one of USD / EUR / GBP (C8)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['USD', 'EUR', 'GBP']
+
+      - name: payout_amount
+        description: >
+          Gross payout value. Always present (C9, presence half). The
+          non-negativity half of C9 has no built-in generic test and lives in
+          tests/day4/assert_d4_payout_amount_non_negative.sql.
+        data_tests:
+          - not_null
+
+  - name: stg_d4_payout_lines
+    description: >
+      Payout line feed, one row per line_id. Rename-and-cast passthrough of
+      raw_d4_payout_lines, including the three rows damaged by the faulty May
+      export. Enforces C10-C14; the three known defects are surfaced at warn
+      severity so they are reported on every run without blocking the build.
+    columns:
+
+      - name: line_id
+        description: "Primary key. Unique and always present (C10)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: payout_id
+        description: >
+          Owning payout header. C11 requires every line to be attributable to an
+          existing payout. Two separate defects exist upstream and each gets its
+          own assertion: not_null catches lines that arrived with no payout_id
+          (L011); relationships catches lines pointing at a header that does not
+          exist (L010 -> P9999). Both are warn: they are the payments team's
+          export bug, not a reason to stop the payout report.
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+          - relationships:
+              to: ref('stg_d4_payouts')
+              field: payout_id
+              config:
+                severity: warn
+
+      - name: order_ref
+        description: "Marketplace order reference. Not covered by the contract."
+
+      - name: currency
+        description: >
+          Settlement currency of the line (C12). The value-domain half is an
+          error: any unexpected currency code is a real problem. The presence
+          half is warn, because the same faulty export produced one line with no
+          currency (L012), which must be reported but not imputed or blocked on.
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+          - accepted_values:
+              values: ['USD', 'EUR', 'GBP']
+
+      - name: line_amount
+        description: >
+          Line value. Always present (C14, presence half); non-negativity is
+          asserted in tests/day4/assert_d4_line_amount_non_negative.sql.
+        data_tests:
+          - not_null
+
+      - name: payment_method
+        description: >
+          Settlement rail. C13 constrains the value only when one is recorded;
+          a missing method means the marketplace default rail and is expected
+          behaviour, so this column carries accepted_values but deliberately no
+          not_null. accepted_values ignores NULLs, which is exactly the
+          semantics C13 asks for.
+        data_tests:
+          - accepted_values:
+              values: ['bank_transfer', 'paypal', 'wise']

@@ -1,0 +1,48 @@
+version: 2
+
+models:
+
+  - name: fct_d4_seller_payouts
+    description: >
+      One row per seller_id appearing in stg_d4_payouts, with header-grain payout
+      metrics and a line-grain line count rolled up through the payout header.
+      Sellers with no payouts at all do not appear. Enforces C17-C19.
+    columns:
+
+      - name: seller_id
+        description: "Grain of the table. Unique and never null (C17)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: seller_name
+        description: >
+          Seller display name carried from stg_d4_sellers. The contract states no
+          rule for this column in the mart, so it is untested here; its presence
+          is already guaranteed upstream by C2.
+
+      - name: payout_count
+        description: "Count of this seller's payouts in any status. Never null (C18)."
+        data_tests:
+          - not_null
+
+      - name: paid_payout_count
+        description: "Count of this seller's PAID payouts, zero if none. Never null (C18)."
+        data_tests:
+          - not_null
+
+      - name: paid_amount
+        description: >
+          Sum of payout_amount over this seller's PAID payouts, zeroed rather
+          than nulled when there are none. Never null (C18); non-negativity is
+          asserted in tests/day4/assert_d4_paid_amount_non_negative.sql (C19).
+        data_tests:
+          - not_null
+
+      - name: line_count
+        description: >
+          Count of payout lines belonging to this seller's payouts, in any
+          status, zero if none. Lines that no payout claims are excluded by the
+          join. Never null (C18).
+        data_tests:
+          - not_null

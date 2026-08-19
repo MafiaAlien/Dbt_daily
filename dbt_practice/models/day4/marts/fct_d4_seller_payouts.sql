@@ -12,11 +12,14 @@ sellers as (
         {{ ref('stg_d4_sellers') }}
 ),
 
-payout_lines as (
-    select 
-        *
-    from 
-        {{ ref('stg_d4_payout_lines') }}
+lines_per_payout as (
+
+    select
+        payout_id,
+        count(*) as line_count
+    from {{ ref('stg_d4_payout_lines') }}
+    group by 1
+
 ),
 
 agg_payouts as (
@@ -24,10 +27,10 @@ agg_payouts as (
         p.seller_id,
         coalesce(count(*),0) as payout_count,
         sum(case when p.status = 'PAID' then 1 else 0 end) as paid_payout_count,
-        sum(case when p.status = 'PAID' then coalesce(p.payout_amount, 0) else 0 end)paid_amount,
-        coalesce(count(line_id), 0) as line_count
+        sum(case when p.status = 'PAID' then coalesce(p.payout_amount, 0) else 0 end) as paid_amount,
+        coalesce(sum(l.line_count), 0) as line_count
     from 
-        payout p left join payout_lines pl on p.payout_id = pl.payout_id
+        payout p left join lines_per_payout l on p.payout_id = l.payout_id
     group by p.seller_id
 )
 
@@ -36,7 +39,7 @@ select
     s.seller_name,
     a.payout_count,
     a.paid_payout_count,
-    a.paid_amount,
+    cast(a.paid_amount as decimal(12, 2)) as paid_amount,
     a.line_count 
 from 
     agg_payouts a left join sellers s on a.seller_id = s.seller_id
