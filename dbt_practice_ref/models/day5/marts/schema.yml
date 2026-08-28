@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: fct_d5_daily_warehouse_shipments
+    description: >
+      Daily shipment mart at (ship_date, warehouse_code). Incremental: each run
+      rebuilds only the days the newest batch could touch, and rebuilds them
+      from the whole feed rather than from the batch alone.
+    columns:
+      - name: ship_date
+        data_tests:
+          - not_null
+      - name: warehouse_code
+        data_tests:
+          - not_null
+      - name: shipment_count
+        data_tests:
+          - not_null
+      - name: delivered_count
+        data_tests:
+          - not_null
+      - name: shipping_cost_usd
+        data_tests:
+          - not_null
+      - name: item_quantity
+        data_tests:
+          - not_null
+      - name: total_weight_kg
+        data_tests:
+          - not_null

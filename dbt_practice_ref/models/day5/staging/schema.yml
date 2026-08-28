@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: stg_d5_shipments
+    description: >
+      Shipment state log, one row per feed row. A shipment_id appears once per
+      status change, distinguished by updated_at. Deliberately no unique test on
+      shipment_id: the feed does not promise it and the grain is the feed row.
+    columns:
+      - name: shipment_id
+        data_tests:
+          - not_null
+      - name: warehouse_code
+        data_tests:
+          - not_null
+      - name: ship_date
+        data_tests:
+          - not_null
+      - name: status
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['DELIVERED', 'IN_TRANSIT', 'CANCELLED']
+      - name: shipping_cost_usd
+        description: Header-level cost, charged once per shipment.
+        data_tests:
+          - not_null
+      - name: updated_at
+        description: Unique within a shipment_id; the tiebreaker for "latest state".
+        data_tests:
+          - not_null
+
+  - name: stg_d5_shipment_items
+    description: Item lines, one row per item_id, written once.
+    columns:
+      - name: item_id
+        data_tests:
+          - unique
+          - not_null
+      - name: shipment_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d5_shipments')
+              field: shipment_id
+      - name: sku
+      - name: quantity
+        data_tests:
+          - not_null
+      - name: line_weight_kg
+        data_tests:
+          - not_null

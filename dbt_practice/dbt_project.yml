@@ -39,6 +39,15 @@ models:
       marts:
         +materialized: table
 
+    # Day 5 is about incremental models. The mart is configured as `table` here on
+    # purpose — the problem requires it to be incremental, and where that override
+    # lives is part of the exercise. Do not change this block.
+    day5:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: table
+
 seeds:
   dbt_practice:
     +quote_columns: false

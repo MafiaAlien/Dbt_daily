@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: int_d5_shipments_latest
+    description: >
+      One row per non-cancelled shipment, carrying its latest header state and
+      its item lines already rolled up to shipment level. Header measures stay
+      at header grain; line measures are pre-aggregated, so the mart can sum
+      both on one pass without duplicating shipping_cost_usd per item line.
+    columns:
+      - name: shipment_id
+        data_tests:
+          - unique
+          - not_null
+      - name: ship_date
+        data_tests:
+          - not_null
+      - name: warehouse_code
+        data_tests:
+          - not_null
+      - name: item_quantity
+        data_tests:
+          - not_null
+      - name: total_weight_kg
+        data_tests:
+          - not_null
