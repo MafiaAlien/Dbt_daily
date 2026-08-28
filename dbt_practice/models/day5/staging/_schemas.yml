@@ -1,0 +1,65 @@
+models:
+  - name: stg_d5_shipments
+    description: log unique shipments with ship date and status
+    columns:
+      - name: shipment_id 
+        description: id for single shipment, not unique due to append_only source
+        data_tests:
+          - not_null
+      
+      - name: warehouse_code
+        description: warehouse_code
+        data_tests:
+          - not_null 
+      
+      - name: ship_date 
+        description: the ship date of shipment 
+        data_tests:
+          - not_null
+      
+      - name: status
+        description: status of this shipment
+        data_tests:
+          - not_null 
+          - accepted_values: 
+              arguments: 
+                values: ['DELIVERED', 'IN_TRANSIT', 'CANCELLED']
+      
+      - name: shipping_cost_usd 
+        description: cost for this shipment
+        data_tests:
+          - not_null
+      
+      - name: updated_at
+        description: the date that row was updated, unique per shipment
+        data_tests:
+          - not_null 
+  
+  - name: stg_d5_shipment_items
+    description: log items for specific shipment
+    columns:
+      - name: item_id
+        description: unique id for items belonging to a specified shipment
+        data_tests:
+          - not_null
+          - unique
+
+      - name: shipment_id 
+        description: the shipments 
+        data_tests:
+          - not_null 
+          - relationships:
+              arguments: 
+                field: shipment_id
+                to: ref('stg_d5_shipments')
+      
+      - name: quantity
+        description: the number of items 
+        data_tests:
+          - not_null
+      
+      - name: line_weight_kg
+        description: gross weight of the item
+        data_tests:
+          - not_null
+      

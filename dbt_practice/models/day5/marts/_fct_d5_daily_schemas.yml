@@ -1,0 +1,38 @@
+models:
+  - name: fct_d5_daily_warehouse_shipments
+    description: agg table to final output
+    columns:
+      - name: ship_date
+        description: exact date of shipment 
+        data_tests:
+          - not_null
+    
+      - name: warehouse_code
+        description: warehouse unique id 
+        data_tests:
+          - not_null
+
+      - name: shipment_count
+        description: count of shipment without cancel
+        data_tests:
+          - not_null
+
+      - name: delivered_count
+        description: cnt of deliveried shipment
+        data_tests:
+          - not_null 
+
+      - name: shipping_cost_usd
+        description: total cost of the shipment
+        data_tests:
+          - not_null
+
+      - name: item_quantity
+        description: total quantity of the shipment
+        data_tests:
+          - not_null
+
+      - name: total_weight_kg
+        description: total weight of shipment
+        data_tests:
+          - not_null
