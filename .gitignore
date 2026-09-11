@@ -19,6 +19,8 @@ dbt_practice_ref/seeds/day*/
 # DuckDB database file — disposable, rebuilt with `dbt build`
 *.duckdb
 *.duckdb.wal
+# Spill directory DuckDB creates during large builds
+*.duckdb.tmp/
 
 # credentials — the Databricks profile carries a PAT
 profiles.yml
@@ -34,6 +36,11 @@ profiles.yml
 # covered by the global gitignore on one machine, which does not travel with a clone.
 .claude/settings.local.json
 
+# Claude Code local worktrees — a full copy of the repo, profiles.yml included.
+# Previously only in .git/info/exclude, which does not travel with a clone: the
+# same gap settings.local.json had before it was moved here.
+.claude/worktrees/
+
 # Progress log. Stays local: it is a running record of my own recurring mistakes,
 # kept for revision rather than publication. The workflow specs in docs/01-04 are
 # published — they are the design, not the self-assessment.
@@ -42,6 +49,8 @@ docs/05_progress_log.md
 # python / editor
 __pycache__/
 .venv/
+venv/
+env/
 .DS_Store
 .vscode/
 .idea/
