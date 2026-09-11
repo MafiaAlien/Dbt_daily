@@ -73,10 +73,11 @@ name rather than path, so the day folders are for humans, not for dbt.
 ```
 days/dayNN/
   problem.md              the problem: grain, per-metric definitions, expected output
+  notes.md                my assumptions going in, and the debrief answers coming out
   .traps.md               what the day is really testing; not read until stage 4
   reference_solution.md   pasted verbatim from the blind session
   verdict.md              my review, committed before execution
-  digest.md              what the traps caught, and what the review missed
+  digest.md               what the traps caught, and what the review missed
 dbt_practice/             my solutions
 dbt_practice_ref/         reference solutions, transcribed unedited
 docs/06_key_takeaways.md  cumulative, mechanism-level notes
@@ -89,11 +90,21 @@ the whole loop, including the calls I got wrong.
 is revision material, re-read cold; everything else in the repo is English on purpose,
 as interview expression practice.
 
+One file referenced throughout the docs is deliberately absent here:
+`docs/05_progress_log.md`, the running scorecard and cumulative blindspot log. It is
+kept local — a record of my own recurring mistakes, written for revision rather than for
+publication. The workflow specs in `docs/01`–`docs/04` are the design and are published;
+the self-assessment is not. Its per-day conclusions do reach this repo, in each
+`days/dayNN/digest.md`.
+
 ## Days
 
 | Day | Topic | Difficulty |
 |---|---|---|
 | 1 | staging layer, `ref()` layering, schema tests | Easy |
 | 2 | sources vs seeds: `source()`, freshness config, renaming and typing discipline | Easy |
+| 3 | materialization trade-offs: view vs table vs ephemeral, and config precedence | Easy–Medium |
+| 4 | test design: translating a written data contract into a test suite | Medium |
+| 5 | incremental models: `is_incremental()`, `unique_key`, the watermark boundary | Medium |
 
 Ongoing.

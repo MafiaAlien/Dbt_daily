@@ -19,7 +19,7 @@ picking one.
 | `docs/02_problem_format_and_templates.md` | Problem file format, generation prompt, difficulty calibration |
 | `docs/03_environment_setup.md` | Docker + DuckDB env, day scoping, naming rules |
 | `docs/04_curriculum_backlog.md` | Day 1–14 topic order, blocked by prerequisite courses |
-| `docs/05_progress_log.md` | Course status, per-day results, digest archive, blindspot log |
+| `docs/05_progress_log.md` | Course status, per-day results, digest archive, blindspot log — **gitignored, local only**; it exists on disk but is not published with this repo |
 
 ## Your role
 
