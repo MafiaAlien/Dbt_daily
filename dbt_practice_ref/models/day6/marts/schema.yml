@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: fct_d6_daily_city_payouts
+    description: >
+      Daily city-level courier payout mart, one row per (delivery_date,
+      city_code). Incremental with a 4-day lookback so days that reopen are
+      recomputed in full. Cancelled deliveries are excluded entirely; a pair
+      whose deliveries are all cancelled produces no row.
+    columns:
+      - name: delivery_date
+        description: Grain component.
+        data_tests:
+          - not_null
+      - name: city_code
+        description: Grain component.
+        data_tests:
+          - not_null
+      - name: delivery_count
+        description: Non-cancelled deliveries on that date in that city.
+        data_tests:
+          - not_null
+      - name: completed_count
+        description: Of those, the ones whose status is COMPLETED.
+        data_tests:
+          - not_null
+      - name: payout_base_usd
+        description: Header-level base payout, summed once per delivery.
+        data_tests:
+          - not_null
+      - name: adjustment_total_usd
+        description: Line-level adjustments, summed. 0 when there are none.
+        data_tests:
+          - not_null
+      - name: total_payout_usd
+        description: payout_base_usd + adjustment_total_usd.
+        data_tests:
+          - not_null

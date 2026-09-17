@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: int_d6_delivery_payouts
+    description: >
+      One row per non-cancelled delivery, with its adjustment lines already
+      summed to delivery grain. Exists so the mart aggregates a single grain.
+    columns:
+      - name: delivery_id
+        data_tests:
+          - unique
+          - not_null
+      - name: city_code
+        data_tests:
+          - not_null
+      - name: delivery_date
+        data_tests:
+          - not_null
+      - name: status
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['COMPLETED', 'RETURNED']
+      - name: payout_base_usd
+        description: Header amount, carried through unchanged — never re-summed.
+        data_tests:
+          - not_null
+      - name: adjustment_total_usd
+        description: Sum of the delivery's adjustment lines; 0 when it has none.
+        data_tests:
+          - not_null

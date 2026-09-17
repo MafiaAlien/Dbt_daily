@@ -48,6 +48,16 @@ models:
       marts:
         +materialized: table
 
+    # Day 6 is about late-arriving data. Materialization is a PROJECT concern here —
+    # the mart is declared incremental below, so no in-model +materialized is needed.
+    # unique_key / incremental_strategy / on_schema_change are MODEL concerns and are
+    # not set here on purpose. Do not change this block.
+    day6:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: incremental
+
 seeds:
   dbt_practice:
     +quote_columns: false

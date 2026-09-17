@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: stg_d6_deliveries
+    description: >
+      One row per delivery_id. Append-only, write-once header feed: a delivery
+      is written once, when it is finalised, and is never restated. Filtered to
+      batch_id <= var('d6_batch').
+    columns:
+      - name: delivery_id
+        description: Business key. Unique because the feed is write-once.
+        data_tests:
+          - unique
+          - not_null
+      - name: courier_id
+        description: Courier who performed the delivery.
+      - name: city_code
+        description: City the delivery was performed in. Mart grain component.
+        data_tests:
+          - not_null
+      - name: delivery_date
+        description: Service date. Mart grain component.
+        data_tests:
+          - not_null
+      - name: status
+        description: Final status at the moment the delivery was written.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['COMPLETED', 'RETURNED', 'CANCELLED']
+      - name: payout_base_usd
+        description: Header-level base payout, paid once per delivery.
+        data_tests:
+          - not_null
+      - name: loaded_at
+        description: Timestamp of the nightly load that delivered this row.
+        data_tests:
+          - not_null
+
+  - name: stg_d6_delivery_adjustments
+    description: >
+      One row per adjustment_id. Zero, one or several lines per delivery.
+      Filtered to batch_id <= var('d6_batch').
+    columns:
+      - name: adjustment_id
+        data_tests:
+          - unique
+          - not_null
+      - name: delivery_id
+        description: Foreign key to stg_d6_deliveries. No orphan lines exist.
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d6_deliveries')
+              field: delivery_id
+      - name: adj_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['TIP', 'SURGE', 'PENALTY']
+      - name: adj_amount_usd
+        description: Signed line amount; penalties are negative.
+        data_tests:
+          - not_null
