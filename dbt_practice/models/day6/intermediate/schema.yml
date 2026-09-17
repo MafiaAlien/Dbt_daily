@@ -1,0 +1,6 @@
+version: 2
+
+models:
+  - name: int_d6_not_cancelled_latest
+    description: a staging table which filter out cancelled delivery and agg adj amount per delivery
+    

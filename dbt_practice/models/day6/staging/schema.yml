@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: stg_d6_deliveries
+    description: delivery log tables
+    columns:
+      - name: delivery_id 
+        description: unique id for single delivery
+        data_tests:
+          - not_null
+          - unique
+      
+      - name: courier_id
+        description: courier who is responsible for this delivery, no data quality checks here 
+
+      - name: city_code
+        description: delivery city not null
+        data_tests:
+          -  not_null
+      
+      - name: delivery_date
+        description: date of delivery not null
+        data_tests:
+          - not_null 
+      
+      - name: status 
+        description: delivery status 
+        data_tests:
+          - not_null
+          - accepted_values: 
+              arguments: 
+                values: ['COMPLETED', 'RETURNED', 'CANCELLED']
+
+      - name: payout_base_usd 
+        description: payout base usd
+        data_tests:
+          - not_null
+
+      - name: loaded_at 
+        description: timestamp of data load
+        data_tests:
+          - not_null
+
+
+  - name: stg_d6_delivery_adjustments
+    description: adjustments log table
+    columns:
+      - name: adjustment_id
+        description: unique id for this adjustment
+        data_tests:
+          - not_null
+          - unique 
+      
+      - name: delivery_id
+        description: delivery id this adjustment belong to
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: 
+                field: delivery_id
+                to: ref('stg_d6_deliveries')
+
+      - name: adj_type
+        description: adjustment type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: 
+                values: ['TIP', 'SURGE', 'PENALTY']
+      
+      - name: adj_amount_usd
+        description: amount of adjustment in usd
+        data_tests:
+          - not_null

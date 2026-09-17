@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: fct_d6_daily_city_payouts
+    description: aggregation model to get delivery count, completed count and taotal payouts
+    columns:
+      - name: delivery_date
+        description: data of delivery
+        data_tests:
+          - not_null
+
+      - name: city_code
+        description: original city of delivery
+        data_tests:
+          - not_null
+
+      - name: delivery_count
+        description: total delivery cnt for per(delivery_date, city_code)
+        data_tests:
+          - not_null 
+
+      - name: completed_count
+        description: cnt of delivery whose status = "COMPLETED", will be 0 if null 
+        data_tests:
+          - not_null
+
+      - name: payout_base_usd
+        description:  sum of payout_base_usd from upstream, decimal(10 ,2)
+        data_tests:
+          - not_null
+
+      - name: adjustment_total_usd
+        description: adj total usd and never null, using 0 instead, decimal(10, 2)
+        data_tests:
+          - not_null
+
+      - name: total_payout_usd
+        description: sum of payout_base_usd + sum of adjustment_total_usd, decimal(10, 2)
+        data_tests:
+          - not_null
