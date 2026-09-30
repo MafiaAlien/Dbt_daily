@@ -107,5 +107,6 @@ the self-assessment is not. Its per-day conclusions do reach this repo, in each
 | 4 | test design: translating a written data contract into a test suite | Medium |
 | 5 | incremental models: `is_incremental()`, `unique_key`, the watermark boundary | Medium |
 | 6 | late-arriving data: incremental lookback windows, and what `--full-refresh` does and does not prove | Medium–Hard |
+| 7 | snapshots: the timestamp strategy, `dbt_valid_from` / `dbt_valid_to`, and point-in-time attribution | Medium |
 
 Ongoing.
