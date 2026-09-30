@@ -1,0 +1,29 @@
+version: 2
+
+snapshots:
+  - name: snap_d7_accounts
+    relation: ref('int_d7_account_feed_latest')   
+    description: > 
+      snapshot of the accounts
+    config: 
+      strategy: timestamp
+      unique_key: account_id
+      updated_at: updated_at
+    columns:
+      - name: account_id 
+        description: account id from stg table
+        data_tests:
+          - not_null
+
+      - name: contract_tier
+        description: contract_tier
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: 
+                values: ['STANDARD', 'PREMIUM', 'ENTERPRISE']
+      
+      - name: dbt_valid_from
+        description: effective_at for snapshot row 
+        data_tests:
+          - not_null

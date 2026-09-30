@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: stg_d7_account_versions
+    description: log version of accounts
+    columns:
+      - name: account_id
+        description: unique acc id 
+        data_tests:
+          - not_null 
+
+      - name: account_name
+        description: corresponding name to account id
+        data_tests:
+          - not_null
+
+      - name: contract_tier
+        description: type of contract for account 
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: 
+                values: ['STANDARD', 'PREMIUM', 'ENTERPRISE']
+
+      - name: billing_region
+        description: billing region
+        data_tests:
+          - not_null
+
+      - name: account_status
+        description: status of account active/churned
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: 
+                values: ['ACTIVE', 'CHURNED']
+
+      - name: updated_at
+        description: updated ts 
+        data_tests:
+          - not_null
+
+  - name: stg_d7_orders
+    description: log orders 
+    columns:
+      - name: order_id
+        description: unique id for each order, not null
+        data_tests:
+          - unique
+          - not_null
+
+      - name: account_id
+        description: account id 
+        data_tests:
+          - not_null
+
+      - name: order_ts
+        description: the ts placing orders
+        data_tests:
+          - not_null 
+        
+      - name: order_amount_usd
+        description: the amount of order 
+        data_tests:
+          - not_null

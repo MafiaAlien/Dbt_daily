@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: int_d7_account_feed_latest
+    description: intermediate table which just load most recent account version 
+    columns:
+      - name: account_id
+        description: account id from upstream stg d7 account version table
+        data_tests:
+          - unique 
+          - not_null 

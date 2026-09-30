@@ -1,0 +1,13 @@
+version: 2
+seeds:
+  - name: ex_sales
+    config:
+      column_types:
+        SKU: bigint
+        CustomerID: bigint
+        TransactionID: bigint
+  - name: ex_customers        
+    config:
+      column_types:
+        CustomerID: bigint
+        Zip: varchar

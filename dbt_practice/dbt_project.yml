@@ -58,6 +58,18 @@ models:
       marts:
         +materialized: incremental
 
+    # Day 7 is about snapshots and SCD2. Only staging and marts are declared here.
+    # `intermediate/` has no entry on purpose — it falls through to dbt's own default.
+    # The SNAPSHOT is configured nowhere in this file: strategy, unique_key and
+    # updated_at are the exercise and belong in the snapshot's own YAML. Do not
+    # change this block.
+    day7:
+      staging:
+        +materialized: view
+      marts:
+        +materialized: table
+
 seeds:
   dbt_practice:
     +quote_columns: false
+    
