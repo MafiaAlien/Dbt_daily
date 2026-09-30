@@ -2,61 +2,51 @@ version: 2
 
 models:
   - name: dim_d7_accounts_current
-    description: log current account info in effect
+    description: One row per currently active account. Churned accounts produce no row.
     columns:
       - name: account_id
-        description: account_id
         data_tests:
+          - unique
           - not_null
-          - unique 
-  
       - name: account_name
         data_tests:
           - not_null
-      
       - name: contract_tier
         data_tests:
           - not_null
-
       - name: billing_region
         data_tests:
           - not_null
-
       - name: current_since
         data_tests:
           - not_null
 
   - name: fct_d7_orders_attributed
-    description: fact table recording order with historical contract tier and regions
+    description: >
+      One row per order. tier_at_order / region_at_order come from the snapshot version
+      in effect at order_ts ([valid_from, valid_to)); current_tier comes from the current dim.
     columns:
-      - name: order_id 
+      - name: order_id
         data_tests:
-          - not_null
           - unique
-      
+          - not_null
       - name: account_id
         data_tests:
           - not_null
-      
       - name: order_ts
         data_tests:
           - not_null
-
       - name: order_amount_usd
         data_tests:
           - not_null
-      
       - name: tier_at_order
         data_tests:
           - not_null
           - accepted_values:
-              arguments: 
-                values: ['STANDARD', 'PREMIUM', 'ENTERPRISE', 'UNKNOWN']
-      
+              values: ['STANDARD', 'PREMIUM', 'ENTERPRISE', 'UNKNOWN']
       - name: region_at_order
         data_tests:
           - not_null
-    
-      - name: current_tier 
+      - name: current_tier
         data_tests:
           - not_null

@@ -30,11 +30,13 @@ cur_account as (
 select 
     o.order_id,
     o.account_id,
-    o.order_ts
+    o.order_ts,
     o.order_amount_usd,
     coalesce(s.contract_tier, 'UNKNOWN') as tier_at_order,
     coalesce(s.billing_region, 'UNKNOWN') as region_at_order,
     coalesce(c.contract_tier, 'UNKNOWN') as current_tier
 from 
-    orders o left join snap_accounts s on o.account_id and s.dbt_valid_from <= o.order_ts < s.dbt_valid_to
+    orders o left join snap_accounts s on o.account_id = s.account_id 
+    and (s.dbt_valid_from <= o.order_ts) 
+    and (s.dbt_valid_to is null or o.order_ts < s.dbt_valid_to)
     left join cur_account c on o.account_id = c.account_id

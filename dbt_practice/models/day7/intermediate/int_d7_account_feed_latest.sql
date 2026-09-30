@@ -10,7 +10,12 @@ with rk_most_updated as (
 
 get_most_recent as (
     select 
-        *
+        account_id,
+        account_name,
+        contract_tier,
+        billing_region,
+        account_status,
+        updated_at
     from 
         rk_most_updated
     where _rn = 1  

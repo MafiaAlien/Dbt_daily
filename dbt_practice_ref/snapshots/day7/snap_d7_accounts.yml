@@ -1,0 +1,23 @@
+snapshots:
+  - name: snap_d7_accounts
+    description: >
+      SCD2 history of accounts, built one nightly run at a time from
+      int_d7_account_feed_latest. Not reproducible from source; never full-refresh.
+    relation: ref('int_d7_account_feed_latest')
+    config:
+      strategy: timestamp
+      unique_key: account_id
+      updated_at: updated_at
+      # dbt_valid_to_current left at its default: the current version has dbt_valid_to = NULL.
+    columns:
+      - name: account_id
+        data_tests:
+          - not_null
+      - name: contract_tier
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['STANDARD', 'PREMIUM', 'ENTERPRISE']
+      - name: dbt_valid_from
+        data_tests:
+          - not_null

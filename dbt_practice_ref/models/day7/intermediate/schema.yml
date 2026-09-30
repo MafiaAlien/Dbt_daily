@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: int_d7_account_feed_latest
+    description: >
+      Current state of each account as of the current batch. Grain: one row per account_id.
+      Versions superseded within the same batch are dropped here and never reach the snapshot.
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
+          - not_null

@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_d7_account_versions
+    description: >
+      Append-only account version feed, filtered to the simulated batch boundary.
+      Grain: one row per (account_id, updated_at). Composite grain, so no unique test here.
+    columns:
+      - name: account_id
+        data_tests:
+          - not_null
+      - name: account_name
+        data_tests:
+          - not_null
+      - name: contract_tier
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['STANDARD', 'PREMIUM', 'ENTERPRISE']
+      - name: billing_region
+        data_tests:
+          - not_null
+      - name: account_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['ACTIVE', 'CHURNED']
+      - name: updated_at
+        data_tests:
+          - not_null
+
+  - name: stg_d7_orders
+    description: Orders. Static, one row per order_id, never restated.
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: account_id
+        data_tests:
+          - not_null
+      - name: order_ts
+        data_tests:
+          - not_null
+      - name: order_amount_usd
+        data_tests:
+          - not_null
