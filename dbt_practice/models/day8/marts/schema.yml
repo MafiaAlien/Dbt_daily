@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: dim_d8_employees_current
+    columns:
+      - name: employee_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: full_name
+        data_tests:
+          - not_null
+        
+      - name: department_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: 
+                field: department_code
+                to: ref('stg_d8_departments')
+
+      - name: job_title
+        data_tests:
+          - not_null
+
+      - name: salary_band
+        data_tests:
+          - not_null
+
+      - name: current_since
+        data_tests:
+          - not_null
+      
+  - name: agg_d8_department_headcount
+    columns:
+      - name: department_code
+        data_tests:
+          - not_null
+          - unique
+      
+      - name: department_name
+        data_tests:
+          - not_null
+
+      - name: current_headcount
+        data_tests:
+          - not_null
+
+      - name: terminations_to_date
+        data_tests:
+          - not_null
+
+
+
+
+
+
+
+
+
+

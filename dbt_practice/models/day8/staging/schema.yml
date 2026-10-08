@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: stg_d8_employees
+    description: employee tables for current 
+    columns:
+      - name: employee_id
+        data_tests:
+          - not_null 
+          - unique 
+      
+      - name: full_name 
+        data_tests:
+          - not_null
+
+      - name: department_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: 
+                field: department_code
+                to: ref('stg_d8_departments')
+      
+      - name: job_title 
+        data_tests:
+          - not_null
+      
+      - name: salary_band
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: 
+                values: ['B1', 'B2', 'B3', 'B4', 'B5']
+      
+      - name: record_updated_at
+        data_tests:
+          - not_null
+
+  - name: stg_d8_departments
+    columns:
+      - name: department_code
+        data_tests:
+          - not_null
+          - unique
+
+      - name: department_name
+        data_tests:
+          - not_null
