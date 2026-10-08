@@ -69,6 +69,18 @@ models:
       marts:
         +materialized: table
 
+    # Day 8 is about snapshot change detection, hard deletes, and a current-view
+    # dimension built on top of a snapshot. The SNAPSHOT is configured nowhere
+    # in this file: strategy, unique_key, check_cols / updated_at and hard_deletes are
+    # the exercise and belong in the snapshot's own YAML. Do not change this block.
+    day8:
+      staging:
+        +materialized: view
+      intermediate:
+        +materialized: view
+      marts:
+        +materialized: table
+
 seeds:
   dbt_practice:
     +quote_columns: false

@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_d8_employees
+    description: "One night's full roster dump (batch selected by var d8_batch). One row per employee employed that night."
+    columns:
+      - name: employee_id
+        data_tests:
+          - unique
+          - not_null
+      - name: full_name
+        data_tests:
+          - not_null
+      - name: department_code
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d8_departments')
+              field: department_code
+      - name: job_title
+        data_tests:
+          - not_null
+      - name: salary_band
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['B1', 'B2', 'B3', 'B4', 'B5']
+      - name: record_updated_at
+        data_tests:
+          - not_null
+      - name: last_login_at
+
+  - name: stg_d8_departments
+    description: "Static department lookup. Not batched."
+    columns:
+      - name: department_code
+        data_tests:
+          - unique
+          - not_null
+      - name: department_name
+        data_tests:
+          - not_null

@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: dim_d8_employees_current
+    description: "One row per employee in the latest dump. Version columns from history, overwrite columns from today's dump."
+    columns:
+      - name: employee_id
+        data_tests:
+          - unique
+          - not_null
+      - name: full_name
+        data_tests:
+          - not_null
+      - name: department_code
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d8_departments')
+              field: department_code
+      - name: job_title
+        data_tests:
+          - not_null
+      - name: salary_band
+        data_tests:
+          - not_null
+      - name: last_login_at
+      - name: current_since
+        data_tests:
+          - not_null
+
+  - name: agg_d8_department_headcount
+    description: "One row per department, all five always."
+    columns:
+      - name: department_code
+        data_tests:
+          - unique
+          - not_null
+      - name: department_name
+        data_tests:
+          - not_null
+      - name: current_headcount
+        data_tests:
+          - not_null
+      - name: terminations_to_date
+        data_tests:
+          - not_null

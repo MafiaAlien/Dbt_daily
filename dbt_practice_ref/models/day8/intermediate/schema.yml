@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: int_d8_employee_history
+    description: "Typed interface to snap_d8_employees. One row per snapshot row."
+    columns:
+      - name: employee_id
+        data_tests:
+          - not_null
+      - name: department_code
+      - name: job_title
+      - name: salary_band
+      - name: dbt_valid_from
+        data_tests:
+          - not_null
+      - name: dbt_valid_to
+      - name: is_deleted
+        data_tests:
+          - not_null
+      - name: is_current
+        data_tests:
+          - not_null

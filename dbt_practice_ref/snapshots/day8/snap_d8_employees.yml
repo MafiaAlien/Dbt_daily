@@ -1,0 +1,33 @@
+version: 2
+
+snapshots:
+  - name: snap_d8_employees
+    description: "SCD2 history of the nightly roster dump. Versions on tracked columns only; terminations are rows."
+    relation: ref('stg_d8_employees')
+    config:
+      unique_key: employee_id
+      strategy: check
+      check_cols: ['department_code', 'job_title', 'salary_band']
+      hard_deletes: new_record
+    columns:
+      - name: employee_id
+        data_tests:
+          - not_null
+      - name: department_code
+        data_tests:
+          - not_null
+      - name: job_title
+        data_tests:
+          - not_null
+      - name: salary_band
+        data_tests:
+          - not_null
+      - name: dbt_valid_from
+        data_tests:
+          - not_null
+      - name: dbt_is_deleted
+        description: "Written by dbt as the varchar literals 'True' / 'False', not a boolean."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['True', 'False']
