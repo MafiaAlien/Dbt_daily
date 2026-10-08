@@ -108,5 +108,6 @@ the self-assessment is not. Its per-day conclusions do reach this repo, in each
 | 5 | incremental models: `is_incremental()`, `unique_key`, the watermark boundary | Medium |
 | 6 | late-arriving data: incremental lookback windows, and what `--full-refresh` does and does not prove | Medium–Hard |
 | 7 | snapshots: the timestamp strategy, `dbt_valid_from` / `dbt_valid_to`, and point-in-time attribution | Medium |
+| 8 | snapshots, part two: `check` vs `timestamp` change detection, `hard_deletes: new_record`, and a current-view dimension on a snapshot | Medium–Hard |
 
 Ongoing.

@@ -48,6 +48,10 @@ Then write, in this order:
 4. Append the Key takeaways bullets to `docs/06_key_takeaways.md` under a
    `## Day N — <topic>` heading — one line each, no prose around them
 5. Add any new blindspot rows and parking-lot rows
+6. Add the Day N row to the `## Days` table in `README.md` — `Day`, `Topic` and
+   `Difficulty` only, matching the existing rows' style (en dash in `Medium–Hard`). The
+   README is published and `docs/05_progress_log.md` is not, so nothing from the
+   scorecard, result or blindspot log goes into it. If the row already exists, leave it.
 
 Write no state file. Step 1 and step 2 together are what make the day derive as `done`.
 
