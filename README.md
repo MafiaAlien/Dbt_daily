@@ -109,5 +109,6 @@ the self-assessment is not. Its per-day conclusions do reach this repo, in each
 | 6 | late-arriving data: incremental lookback windows, and what `--full-refresh` does and does not prove | Medium–Hard |
 | 7 | snapshots: the timestamp strategy, `dbt_valid_from` / `dbt_valid_to`, and point-in-time attribution | Medium |
 | 8 | snapshots, part two: `check` vs `timestamp` change detection, `hard_deletes: new_record`, and a current-view dimension on a snapshot | Medium–Hard |
+| 9 | mixed-topic review: a timestamp-strategy snapshot, point-in-time attribution, and an incremental mart over a late-arriving feed, in one DAG | Medium–Hard |
 
 Ongoing.

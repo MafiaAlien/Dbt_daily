@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: stg_d9_customers
+    description: "One night's full customer dump (batch = d9_batch). One row per customer_id."
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_name
+        data_tests:
+          - not_null
+      - name: plan_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['STARTER', 'GROWTH', 'SCALE']
+      - name: updated_at
+        data_tests:
+          - not_null
+
+  - name: stg_d9_invoices
+    description: "Invoice headers loaded up to d9_batch. One row per invoice_id."
+    columns:
+      - name: invoice_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d9_customers')
+              field: customer_id
+      - name: invoiced_at
+        data_tests:
+          - not_null
+
+  - name: stg_d9_invoice_lines
+    description: "Invoice lines loaded up to d9_batch. One row per line_id."
+    columns:
+      - name: line_id
+        data_tests:
+          - unique
+          - not_null
+      - name: invoice_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d9_invoices')
+              field: invoice_id
+      - name: line_type
+        data_tests:
+          - accepted_values:
+              values: ['SUBSCRIPTION', 'USAGE', 'SEATS']
+      - name: amount_usd
+        data_tests:
+          - not_null
+
+  - name: stg_d9_payments
+    description: "Payments loaded up to d9_batch. One row per payment_id."
+    columns:
+      - name: payment_id
+        data_tests:
+          - unique
+          - not_null
+      - name: invoice_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_d9_invoices')
+              field: invoice_id
+      - name: paid_at
+        data_tests:
+          - not_null
+      - name: amount_usd
+        data_tests:
+          - not_null

@@ -1,0 +1,20 @@
+snapshots:
+  - name: snap_d9_customers
+    relation: ref('stg_d9_customers')
+    description: >
+      SCD2 history of customers in application time. Window = [dbt_valid_from, dbt_valid_to),
+      dbt_valid_to null = open. Read only by int_d9_invoice_revenue.
+    config:
+      unique_key: customer_id
+      strategy: timestamp
+      updated_at: updated_at
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+      - name: plan_code
+        data_tests:
+          - not_null
+      - name: dbt_valid_from
+        data_tests:
+          - not_null

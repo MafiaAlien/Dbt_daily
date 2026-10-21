@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: int_d9_invoice_revenue
+    description: >
+      One row per invoice: plan at invoiced_at (from the snapshot), billed from lines,
+      collected from payments loaded so far (0 when none).
+    columns:
+      - name: invoice_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+      - name: invoiced_at
+      - name: invoice_date
+        data_tests:
+          - not_null
+      - name: plan_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['STARTER', 'GROWTH', 'SCALE']
+      - name: billed_usd
+        data_tests:
+          - not_null
+      - name: collected_usd
+        data_tests:
+          - not_null

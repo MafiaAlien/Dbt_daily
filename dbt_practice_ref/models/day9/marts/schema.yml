@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: fct_d9_daily_plan_revenue
+    description: >
+      One row per (invoice_date, plan_code) with at least one invoice: invoiced, collected so far,
+      outstanding. Incremental; reopens the SLA window each run.
+    columns:
+      - name: invoice_date
+        data_tests:
+          - not_null
+      - name: plan_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['STARTER', 'GROWTH', 'SCALE']
+      - name: invoice_count
+        data_tests:
+          - not_null
+      - name: billed_usd
+        data_tests:
+          - not_null
+      - name: collected_usd
+        data_tests:
+          - not_null
+      - name: outstanding_usd
+        data_tests:
+          - not_null
