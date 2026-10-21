@@ -21,7 +21,7 @@ Written before any execution.
 - for V6, I added dbt_valid_to in to row number rank, this test just needs check if dbt valid to is unique(reference)
 - for V6, I did not test if next dbt valid from is unique for open window (reference)
 - for V8 I missed filter condition: "where s.invoice_id is null or m.invoice_id is null or m.row_count <> 1" (reference)
-- for V9, totally different from answer of references, I did not join stg invoices with snapshot customer to rank by greatest dbt_valid_from not after invoice_at(to get most recent plan code in snapshot), then comparing plan_code values with ones in int model
+- for V9, totally different from answer of references, I did not join stg invoices with snapshot customer to rank by greatest dbt_valid_from not after invoice_at(to get most recent plan code in snapshot), then comparing plan_code values with ones in int model(reference)
 
 ## My own solution — where I think it is wrong
 
