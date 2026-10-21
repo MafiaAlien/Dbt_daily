@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: int_d9_invoice_revenue
+    columns:
+      - name: invoice_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: invoice_date
+        data_tests:
+          - not_null 
+
+      - name: plan_code
+        data_tests:
+          - not_null 
+          - accepted_values:
+              arguments: 
+                values: ['STARTER', 'GROWTH', 'SCALE']
+
+      - name: billed_usd
+        data_tests:
+          - not_null 
+
+      - name: collected_usd
+        data_tests:
+          - not_null 
+

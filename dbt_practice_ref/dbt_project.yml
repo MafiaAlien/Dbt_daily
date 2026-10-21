@@ -92,6 +92,20 @@ models:
       marts:
         +materialized: table
 
+    # Day 9 is the mixed-topic review day: a snapshot, an intermediate, and an
+    # incremental mart in one DAG. The mart is configured as `table` here on purpose —
+    # the problem requires it to be incremental, and where that override lives is part
+    # of the exercise. The SNAPSHOT is configured nowhere in this file: its strategy and
+    # keys belong in the snapshot's own YAML. Do not change this block.
+    # Mirrors dbt_practice/dbt_project.yml exactly.
+    day9:
+      staging:
+        +materialized: view
+      intermediate:
+        +materialized: view
+      marts:
+        +materialized: table
+
 seeds:
   dbt_practice_ref:
     +quote_columns: false
