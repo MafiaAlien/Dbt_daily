@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_d10_captured_payments
+    description: One row per captured payment, with the merchant and month of the order it pays for.
+    columns:
+      - name: payment_id
+        data_tests:
+          - unique
+          - not_null
+      - name: order_id
+        data_tests:
+          - not_null
+      - name: merchant_id
+        data_tests:
+          - not_null
+      - name: order_month
+        data_tests:
+          - not_null
+      - name: payment_method
+      - name: amount_usd
+        data_tests:
+          - not_null

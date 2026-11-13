@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: fct_d10_merchant_month_payments
+    description: >
+      One row per merchant per month with at least one order placed. Per-method columns are
+      generated from var d10_payment_methods and are covered by the singular tests in
+      tests/day10, not listed here.
+    columns:
+      - name: merchant_id
+        data_tests:
+          - not_null
+      - name: order_month
+        data_tests:
+          - not_null
+      - name: order_count
+        data_tests:
+          - not_null
+      - name: captured_amount_usd
+        data_tests:
+          - not_null

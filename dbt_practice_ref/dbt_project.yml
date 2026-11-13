@@ -106,6 +106,23 @@ models:
       marts:
         +materialized: table
 
+    # Day 10 is about Jinja loops that generate conditional-aggregation SQL. All three
+    # layers are configured here; nothing about the day's exercise lives in this block.
+    # The list the mart pivots on is the project var `d10_payment_methods` below.
+    # Mirrors dbt_practice/dbt_project.yml exactly. Do not change this block.
+    day10:
+      staging:
+        +materialized: view
+      intermediate:
+        +materialized: view
+      marts:
+        +materialized: table
+
+vars:
+  # Day 10: the payment methods the mart pivots into columns, in column order.
+  # Run 2 overrides it on the command line with --vars. Mirrors dbt_practice exactly.
+  d10_payment_methods: ['card', 'wallet', 'bank_transfer']
+
 seeds:
   dbt_practice_ref:
     +quote_columns: false
