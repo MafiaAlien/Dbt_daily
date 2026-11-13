@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_d10_captured_payments
+    description:  >
+       captured payments 
+    columns:
+      - name: payment_id
+        data_tests:
+          - not_null
+          - unique
+      - name: order_id
+        data_tests:
+          - not_null
+      - name: merchant_id
+        data_tests:
+          - not_null
+      - name: order_month
+        data_tests:
+          - not_null
+      - name: amount_usd
+        data_tests:
+          - not_null

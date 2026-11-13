@@ -1,0 +1,21 @@
+payment_id,order_id,payment_method,status,amount_usd,paid_at
+P01,O01,card,captured,40.00,2026-09-03 10:16:00
+P02,O01,card,captured,25.50,2026-09-03 10:17:30
+P03,O02,CARD,failed,80.00,2026-09-14 16:41:00
+P04,O02,wallet,captured,80.00,2026-09-14 16:43:00
+P05,O03,Wallet,captured,30.00,2026-10-01 00:05:00
+P06,O03,,captured,12.00,2026-10-01 00:06:00
+P07,O04,bank_transfer,captured,150.00,2026-09-06 09:00:00
+P08,O05,card,failed,45.00,2026-09-20 12:31:00
+P09,O06,bnpl,captured,120.00,2026-10-02 08:21:00
+P10,O06,card,captured,20.00,2026-10-02 08:22:00
+P11,O07,card,captured,60.00,2026-10-11 19:06:00
+P12,O08,gift_card,captured,25.00,2026-10-07 14:11:00
+P13,O08,card,captured,35.00,2026-10-07 14:11:30
+P14,O09,BNPL,captured,60.00,2026-10-18 11:46:00
+P15,O09,bnpl,captured,30.00,2026-11-18 11:46:00
+P16,O10,wallet,failed,55.00,2026-10-25 17:31:00
+P17,O10,wallet,captured,55.00,2026-10-25 17:33:00
+P18,O11,,captured,18.00,2026-10-09 10:01:00
+P19,O11,bank_transfer,captured,200.00,2026-10-09 10:02:00
+P20,O13,wallet,failed,70.00,2026-09-22 13:06:00
